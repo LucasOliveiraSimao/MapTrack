@@ -1,0 +1,52 @@
+[versions]
+core = "1.9.0"
+material = "1.8.0"
+appcompat = "1.6.1"
+constraintlayout = "2.1.4"
+lifecycle = "2.5.1"
+room = "2.5.0"
+coroutines = "1.6.4"
+navigation = "2.5.3"
+glide = "4.14.2"
+hilt = "2.45"
+mpAndroidChart = "v3.1.0"
+play_services_maps = "18.1.0"
+play-services-location = "21.0.1"
+junit = "4.13.2"
+test_ext = "1.1.5"
+espresso = "3.5.1"
+
+
+[libraries]
+core = { module = "androidx.core:core-ktx", version.ref = "core" }
+appCompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+
+viewModel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+liveData = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+
+roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
+roomKtx = { module = "androidx.room:room-ktx", version.ref = "room" }
+roomCompile = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+navFragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
+navUi = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
+
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glideCompiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+
+hiltAndroid = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hiltCompiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+
+playServicesMaps = { module = "com.google.android.gms:play-services-maps", version.ref = "play_services_maps" }
+playServicesLocation = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
+
+mpAndroidChart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpAndroidChart" }
+
+junit = { module = "junit:junit", version.ref = "junit" }
+testExt = { module = "androidx.test.ext:junit", version.ref = "test_ext" }
+espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
