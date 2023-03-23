@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">MapTrack</string>
+
+    <!--    Content Card Home-->
+    <string name="total_distance">Distância Total</string>
+    <string name="total_km">135,20 km</string>
+    <string name="total_time">155,30 min</string>
+    <string name="total_calories">3215 kcal</string>
+    <!--    Content Card Home-->
+
+    <!--  List Item  -->
+    <string name="example_date">15/08/23</string>
+    <string name="example_km">1,24 km</string>
+    <string name="example_time">54 min</string>
+    <string name="your_routes">Seus Trajetos</string>
+    <!--  List Item  -->
 </resources>
