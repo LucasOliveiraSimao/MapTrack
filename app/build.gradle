@@ -34,6 +34,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -55,7 +58,7 @@ dependencies {
     kapt libs.glideCompiler
 
     implementation libs.hiltAndroid
-    implementation libs.hiltCompiler
+    kapt libs.hiltCompiler
 
     implementation libs.playServicesMaps
     implementation libs.playServicesLocation
