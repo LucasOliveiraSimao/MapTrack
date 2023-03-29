@@ -12,6 +12,7 @@ hilt = "2.45"
 mpAndroidChart = "v3.1.0"
 play_services_maps = "18.1.0"
 play-services-location = "21.0.1"
+easy_permission = "3.0.0"
 junit = "4.13.2"
 test_ext = "1.1.5"
 espresso = "3.5.1"
@@ -46,6 +47,8 @@ playServicesMaps = { module = "com.google.android.gms:play-services-maps", versi
 playServicesLocation = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 
 mpAndroidChart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpAndroidChart" }
+
+easypermission = {module = "pub.devrel:easypermissions",version.ref = "easy_permission"}
 
 junit = { module = "junit:junit", version.ref = "junit" }
 testExt = { module = "androidx.test.ext:junit", version.ref = "test_ext" }

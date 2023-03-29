@@ -70,6 +70,8 @@ dependencies {
     implementation libs.material
     implementation libs.constraintlayout
 
+    implementation libs.easypermission
+
     testImplementation libs.junit
     androidTestImplementation libs.testExt
     androidTestImplementation libs.espresso
