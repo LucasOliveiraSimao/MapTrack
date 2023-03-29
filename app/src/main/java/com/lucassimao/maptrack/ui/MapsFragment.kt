@@ -12,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
 import com.lucassimao.maptrack.util.Constants.GOOGLE_MAPS_CAMERA_ZOOM_VALUE
+import com.lucassimao.maptrack.util.checkPermissions
 
 class MapsFragment : Fragment() {
     private lateinit var binding: FragmentMapsBinding
@@ -32,6 +33,8 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val city = LatLng(-3.142157912706272, -58.44635731534551)
+
+        requireActivity().checkPermissions()
 
         binding.mapView.getMapAsync {
             map = it
@@ -70,4 +73,5 @@ class MapsFragment : Fragment() {
         super.onSaveInstanceState(outState)
         binding.mapView.onSaveInstanceState(outState)
     }
+
 }
