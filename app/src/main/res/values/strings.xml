@@ -14,4 +14,9 @@
     <string name="example_time">54 min</string>
     <string name="your_routes">Seus Trajetos</string>
     <!--  List Item  -->
+
+    <!--  Maps  -->
+    <string name="time_counter">00:00:00:00</string>
+    <string name="start">Começar</string>
+    <!--  Maps  -->
 </resources>

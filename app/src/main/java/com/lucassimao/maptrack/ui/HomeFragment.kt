@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.lucassimao.maptrack.R
 import com.lucassimao.maptrack.data.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentHomeBinding
@@ -25,6 +26,10 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecyclerView(listOfRoutes())
+
+        binding.fabNewRoute.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_mapsFragment)
+        }
 
     }
 
