@@ -43,6 +43,7 @@ dependencies {
 
     implementation libs.viewModel
     implementation libs.liveData
+    implementation libs.lifecycleService
 
     implementation libs.roomRuntime
     implementation libs.roomKtx
