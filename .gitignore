@@ -121,6 +121,7 @@ obj/
 .idea/navEditor.xml
 .idea/androidTestResultsUserPreferences.xml
 .idea/render.experimental.xml
+.idea/kotlinc.xml
 
 # Legacy Eclipse project files
 .classpath

@@ -43,6 +43,7 @@ dependencies {
 
     implementation libs.viewModel
     implementation libs.liveData
+    implementation libs.lifecycleService
 
     implementation libs.roomRuntime
     implementation libs.roomKtx
@@ -69,6 +70,8 @@ dependencies {
     implementation libs.appCompat
     implementation libs.material
     implementation libs.constraintlayout
+
+    implementation libs.easypermission
 
     testImplementation libs.junit
     androidTestImplementation libs.testExt
