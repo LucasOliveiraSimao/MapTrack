@@ -10,21 +10,23 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.lucassimao.maptrack.R
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
-import com.lucassimao.maptrack.service.MapTrackService
+import com.lucassimao.maptrack.service.NavigationMapTrackService
 import com.lucassimao.maptrack.util.Constants.GOOGLE_MAPS_CAMERA_ZOOM_VALUE
 import com.lucassimao.maptrack.util.Constants.PERMISSION_REQUEST_CODE
 import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
-import com.lucassimao.maptrack.util.PermissionHelper.hasLocationPermissions
+import com.lucassimao.maptrack.util.Constants.STOP_SERVICE_ACTION
+import com.lucassimao.maptrack.util.ListOfLocations
+import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
 class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: FragmentMapsBinding
 
-    private var map: GoogleMap? = null
+    private var routePolylines = mutableListOf<ListOfLocations>()
+    private var service = NavigationMapTrackService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +37,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         requestPermissions()
         binding.mapView.onCreate(savedInstanceState)
+        setupService()
 
         return binding.root
     }
@@ -42,32 +45,63 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.mapsBtnStart.setOnClickListener {
+        binding.btnToggle.setOnClickListener {
+            toggleButtonText()
             sendCommandToService(START_OR_RESUME_SERVICE_ACTION)
         }
 
         binding.mapView.getMapAsync { map ->
-            with(map) {
-                val position = LatLng(-3.140788, -58.452946)
-                addMarker(MarkerOptions().position(position))
-                mapType = GoogleMap.MAP_TYPE_SATELLITE
-                moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        position,
-                        GOOGLE_MAPS_CAMERA_ZOOM_VALUE
-                    )
-                )
-
-            }
-
+            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
         }
 
     }
 
+    private fun toggleButtonText() {
+        service.isTracking.observe(viewLifecycleOwner) { isTracking ->
+            setTextAndClickListener(isTracking)
+        }
+    }
+
+    private fun setTextAndClickListener(isTracking: Boolean) {
+        val buttonText = if (isTracking) getString(R.string.pause) else getString(R.string.restart)
+        binding.btnToggle.text = buttonText
+        binding.btnToggle.setOnClickListener {
+            if (isTracking) {
+                sendCommandToService(STOP_SERVICE_ACTION)
+                binding.btnFinish.visibility = View.VISIBLE
+            } else {
+                sendCommandToService(START_OR_RESUME_SERVICE_ACTION)
+                binding.btnFinish.visibility = View.INVISIBLE
+            }
+        }
+    }
+
+    private fun setupService() {
+        service.listOfPolylinesLiveData.observe(viewLifecycleOwner) {
+            routePolylines = it
+            moveCameraToUserLocationWithZoom(routePolylines)
+        }
+    }
+
+    private fun moveCameraToUserLocationWithZoom(routePolylines: MutableList<MutableList<LatLng>>) {
+        if (routePolylines.isNotEmpty() && routePolylines.last().isNotEmpty()) {
+            binding.mapView.getMapAsync { map ->
+                with(map) {
+                    animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            routePolylines.last().last(),
+                            GOOGLE_MAPS_CAMERA_ZOOM_VALUE
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     private fun sendCommandToService(action: String) {
-        Intent(requireContext(), MapTrackService::class.java).also {
-            it.action = action
-            requireContext().startService(it)
+        Intent(requireContext(), NavigationMapTrackService::class.java).also { intent ->
+            intent.action = action
+            requireContext().startService(intent)
         }
     }
 

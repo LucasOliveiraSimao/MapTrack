@@ -31,7 +31,7 @@
         </activity>
 
         <service
-            android:name=".service.MapTrackService"
+            android:name=".service.NavigationMapTrackService"
             android:foregroundServiceType="location" />
 
     </application>
