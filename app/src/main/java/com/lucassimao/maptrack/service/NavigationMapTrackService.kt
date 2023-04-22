@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.lucassimao.maptrack.util.Constants.FASTEST_INTERVAL_TIME
 import com.lucassimao.maptrack.util.Constants.INTERVAL_TIME
+import com.lucassimao.maptrack.util.Constants.PAUSE_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.STOP_SERVICE_ACTION
 import com.lucassimao.maptrack.util.ListOfPolylines
@@ -26,11 +26,11 @@ class NavigationMapTrackService : LifecycleService() {
 
     companion object {
         val listOfPolylinesLiveData = MutableLiveData<ListOfPolylines>()
-        var isTracking = MutableLiveData<Boolean>()
+        var isTrackingLiveData = MutableLiveData<Boolean>()
     }
 
     private fun publishInitialValues() {
-        isTracking.postValue(false)
+        isTrackingLiveData.postValue(false)
         listOfPolylinesLiveData.postValue(mutableListOf())
     }
 
@@ -38,7 +38,7 @@ class NavigationMapTrackService : LifecycleService() {
         super.onCreate()
         publishInitialValues()
 
-        isTracking.observe(this) {
+        isTrackingLiveData.observe(this) {
             startTracking(it)
         }
     }
@@ -48,52 +48,28 @@ class NavigationMapTrackService : LifecycleService() {
         intent?.let {
             when (it.action) {
                 START_OR_RESUME_SERVICE_ACTION -> {
-                    isTracking.postValue(true)
+                    isTrackingLiveData.postValue(true)
                     startTracking(true)
                 }
 
+                PAUSE_SERVICE_ACTION -> {
+                    pauseTracking()
+                }
+
                 STOP_SERVICE_ACTION -> {
-                    isTracking.postValue(false)
                     stopTracking()
                 }
+
+                else -> {}
             }
         }
 
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            if (isTracking.value!!) {
-                createEmptyPolylines()
-                locationResult.locations.let { routeLocation ->
-                    for (location in routeLocation) {
-                        Log.i("MyTag", "$location")
-                        addLocationToPath(location)
-                    }
-                }
-
-            }
-        }
-
-        private fun addLocationToPath(location: Location) {
-            val userLocation = LatLng(location.latitude, location.longitude)
-            listOfPolylinesLiveData.value?.apply {
-                last().add(userLocation)
-                listOfPolylinesLiveData.postValue(this)
-            }
-        }
-
-        private fun createEmptyPolylines() {
-            listOfPolylinesLiveData.value?.apply {
-                add(mutableListOf())
-                listOfPolylinesLiveData.postValue(this)
-            } ?: listOfPolylinesLiveData.postValue(mutableListOf())
-        }
-    }
-
     @SuppressLint("MissingPermission")
     private fun startTracking(isTracking: Boolean) {
+        createEmptyPolylines()
         if (isTracking) {
             if (hasLocationPermissions(this)) {
                 fusedLocationProviderClient.requestLocationUpdates(
@@ -111,8 +87,42 @@ class NavigationMapTrackService : LifecycleService() {
         }
     }
 
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            if (isTrackingLiveData.value!!) {
+                locationResult.locations.let { routeLocation ->
+                    for (location in routeLocation) {
+                        addLocationToPath(location)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun addLocationToPath(location: Location) {
+        val userLocation = LatLng(location.latitude, location.longitude)
+        listOfPolylinesLiveData.value?.apply {
+            last().add(userLocation)
+            listOfPolylinesLiveData.postValue(this)
+        }
+    }
+
+    private fun createEmptyPolylines() {
+        listOfPolylinesLiveData.value?.apply {
+            add(mutableListOf())
+            listOfPolylinesLiveData.postValue(this)
+        } ?: listOfPolylinesLiveData.postValue(mutableListOf(mutableListOf()))
+    }
+
+    private fun pauseTracking() {
+        isTrackingLiveData.postValue(false)
+    }
+
     private fun stopTracking() {
-        isTracking.postValue(false)
+        isTrackingLiveData.postValue(false)
+        pauseTracking()
+        publishInitialValues()
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 

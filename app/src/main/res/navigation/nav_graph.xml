@@ -18,5 +18,10 @@
         android:id="@+id/mapsFragment"
         android:name="com.lucassimao.maptrack.ui.MapsFragment"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps" >
+        <action
+            app:popUpTo="@id/homeFragment"
+            android:id="@+id/action_mapsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

@@ -7,26 +7,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
 import com.lucassimao.maptrack.R
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
 import com.lucassimao.maptrack.service.NavigationMapTrackService
 import com.lucassimao.maptrack.util.Constants.GOOGLE_MAPS_CAMERA_ZOOM_VALUE
+import com.lucassimao.maptrack.util.Constants.PAUSE_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.PERMISSION_REQUEST_CODE
 import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.STOP_SERVICE_ACTION
 import com.lucassimao.maptrack.util.ListOfLocations
 import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
+import com.lucassimao.maptrack.util.buildPolylineOption
+import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
+@AndroidEntryPoint
 class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: FragmentMapsBinding
 
     private var routePolylines = mutableListOf<ListOfLocations>()
     private var service = NavigationMapTrackService
+    private var map: GoogleMap? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,8 +41,8 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding = FragmentMapsBinding.inflate(layoutInflater)
 
         requestPermissions()
+
         binding.mapView.onCreate(savedInstanceState)
-        setupService()
 
         return binding.root
     }
@@ -50,14 +55,22 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             sendCommandToService(START_OR_RESUME_SERVICE_ACTION)
         }
 
-        binding.mapView.getMapAsync { map ->
-            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+        binding.btnFinish.setOnClickListener {
+            sendCommandToService(STOP_SERVICE_ACTION)
+            findNavController().navigate(R.id.action_mapsFragment_to_homeFragment)
         }
+
+        binding.mapView.getMapAsync {
+            map = it
+            map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
+        }
+
+        setupService()
 
     }
 
     private fun toggleButtonText() {
-        service.isTracking.observe(viewLifecycleOwner) { isTracking ->
+        service.isTrackingLiveData.observe(viewLifecycleOwner) { isTracking ->
             setTextAndClickListener(isTracking)
         }
     }
@@ -67,11 +80,11 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.btnToggle.text = buttonText
         binding.btnToggle.setOnClickListener {
             if (isTracking) {
-                sendCommandToService(STOP_SERVICE_ACTION)
+                sendCommandToService(PAUSE_SERVICE_ACTION)
                 binding.btnFinish.visibility = View.VISIBLE
             } else {
                 sendCommandToService(START_OR_RESUME_SERVICE_ACTION)
-                binding.btnFinish.visibility = View.INVISIBLE
+                binding.btnFinish.visibility = View.GONE
             }
         }
     }
@@ -79,22 +92,42 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private fun setupService() {
         service.listOfPolylinesLiveData.observe(viewLifecycleOwner) {
             routePolylines = it
-            moveCameraToUserLocationWithZoom(routePolylines)
+            addAllPolylines()
+            addLastedPolyline()
+            moveCameraToUserLocationWithZoom()
         }
     }
 
-    private fun moveCameraToUserLocationWithZoom(routePolylines: MutableList<MutableList<LatLng>>) {
+
+    private fun moveCameraToUserLocationWithZoom() {
         if (routePolylines.isNotEmpty() && routePolylines.last().isNotEmpty()) {
-            binding.mapView.getMapAsync { map ->
-                with(map) {
-                    animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            routePolylines.last().last(),
-                            GOOGLE_MAPS_CAMERA_ZOOM_VALUE
-                        )
-                    )
-                }
-            }
+            map?.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    routePolylines.last().last(),
+                    GOOGLE_MAPS_CAMERA_ZOOM_VALUE
+                )
+            )
+        }
+    }
+
+    private fun addLastedPolyline() {
+        if (routePolylines.isNotEmpty() && routePolylines.last().size > 1) {
+
+            val preLastPosition = routePolylines.last()[routePolylines.last().size - 2]
+            val lastPosition = routePolylines.last().last()
+
+            val polylineOptions = buildPolylineOption(preLastPosition, lastPosition)
+
+            map?.addPolyline(polylineOptions)
+        }
+    }
+
+    private fun addAllPolylines() {
+        for (route in routePolylines) {
+
+            val polylineOptions = buildPolylineOption(route)
+
+            map?.addPolyline(polylineOptions)
         }
     }
 
