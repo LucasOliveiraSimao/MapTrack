@@ -16,4 +16,8 @@ object Constants {
 
     const val ROUTE_LINE_COLOR = Color.RED
     const val ROUTE_LINE_WIDTH = 8f
+
+    const val TIMER_UPDATE_INTERVAL_IN_MILLISECONDS = 50L
+
+    const val INTERVAL_IN_SECOND = 1000L
 }

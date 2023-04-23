@@ -16,7 +16,7 @@
     <!--  List Item  -->
 
     <!--  Maps  -->
-    <string name="time_counter">00:00:00:00</string>
+    <string name="time_counter">00:00:00</string>
     <string name="start">Começar</string>
     <string name="restart">Recomeçar</string>
     <string name="you_need_to_accept_location_permissions_to_use_this_app">Você precisa aceitar as permissões de localização para usar este aplicativo</string>

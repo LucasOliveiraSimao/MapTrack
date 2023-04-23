@@ -9,13 +9,20 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.lucassimao.maptrack.util.Constants.FASTEST_INTERVAL_TIME
+import com.lucassimao.maptrack.util.Constants.INTERVAL_IN_SECOND
 import com.lucassimao.maptrack.util.Constants.INTERVAL_TIME
 import com.lucassimao.maptrack.util.Constants.PAUSE_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.STOP_SERVICE_ACTION
+import com.lucassimao.maptrack.util.Constants.TIMER_UPDATE_INTERVAL_IN_MILLISECONDS
 import com.lucassimao.maptrack.util.ListOfPolylines
 import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
+import com.lucassimao.maptrack.util.calculateElapsedTime
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,14 +31,21 @@ class NavigationMapTrackService : LifecycleService() {
     @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+    private var startTimeInMilliseconds = 0L
+    private var previousTime = 0L
+    private var currentElapsedTime = 0L
+    private var lastSecondTime = 0L
+
     companion object {
         val listOfPolylinesLiveData = MutableLiveData<ListOfPolylines>()
         var isTrackingLiveData = MutableLiveData<Boolean>()
+        var totalExecutionTimeLiveData = MutableLiveData<Long>()
     }
 
     private fun publishInitialValues() {
         isTrackingLiveData.postValue(false)
         listOfPolylinesLiveData.postValue(mutableListOf())
+        totalExecutionTimeLiveData.postValue(0L)
     }
 
     override fun onCreate() {
@@ -50,6 +64,7 @@ class NavigationMapTrackService : LifecycleService() {
                 START_OR_RESUME_SERVICE_ACTION -> {
                     isTrackingLiveData.postValue(true)
                     startTracking(true)
+                    initializeTimer()
                 }
 
                 PAUSE_SERVICE_ACTION -> {
@@ -65,6 +80,39 @@ class NavigationMapTrackService : LifecycleService() {
         }
 
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun initializeTimer() {
+
+        createEmptyPolylines()
+        isTrackingLiveData.postValue(true)
+        startTimeInMilliseconds = System.currentTimeMillis()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            while (isTrackingLiveData.value!!) {
+
+                currentElapsedTime = calculateElapsedTime(startTimeInMilliseconds)
+                val totalTime = previousTime + currentElapsedTime
+
+                updateTotalExecutionTime(totalTime)
+
+                delay(TIMER_UPDATE_INTERVAL_IN_MILLISECONDS)
+            }
+            previousTime += currentElapsedTime
+        }
+    }
+
+    private fun updateTotalExecutionTime(totalTime: Long) {
+        totalExecutionTimeLiveData.postValue(totalTime)
+        if (totalExecutionTimeLiveData.value!! >= lastSecondTime + INTERVAL_IN_SECOND) {
+            totalExecutionTimeLiveData.postValue(totalExecutionTimeLiveData.value!! + 1)
+            updateLastSecondTime()
+
+        }
+    }
+
+    private fun updateLastSecondTime() {
+        lastSecondTime += INTERVAL_IN_SECOND
     }
 
     @SuppressLint("MissingPermission")

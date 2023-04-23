@@ -21,6 +21,7 @@ import com.lucassimao.maptrack.util.Constants.STOP_SERVICE_ACTION
 import com.lucassimao.maptrack.util.ListOfLocations
 import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
 import com.lucassimao.maptrack.util.buildPolylineOption
+import com.lucassimao.maptrack.util.getFormattedElapsedTime
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -95,6 +96,9 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             addAllPolylines()
             addLastedPolyline()
             moveCameraToUserLocationWithZoom()
+        }
+        service.totalExecutionTimeLiveData.observe(viewLifecycleOwner) {
+            binding.timeCounter.text = getFormattedElapsedTime(it)
         }
     }
 
