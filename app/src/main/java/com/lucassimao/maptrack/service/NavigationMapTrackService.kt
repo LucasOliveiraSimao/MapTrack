@@ -260,6 +260,8 @@ class NavigationMapTrackService : LifecycleService() {
         publishInitialValues()
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         isFirstTimeRun = true
+        stopForeground(true)
+        stopSelf()
     }
 
 }
