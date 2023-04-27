@@ -1,23 +1,35 @@
 package com.lucassimao.maptrack.service
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_MUTABLE
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Intent
 import android.location.Location
+import android.os.Build
 import android.os.Looper
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
+import com.lucassimao.maptrack.R
 import com.lucassimao.maptrack.util.Constants.FASTEST_INTERVAL_TIME
 import com.lucassimao.maptrack.util.Constants.INTERVAL_IN_SECOND
 import com.lucassimao.maptrack.util.Constants.INTERVAL_TIME
+import com.lucassimao.maptrack.util.Constants.NOTIFICATION_ID
 import com.lucassimao.maptrack.util.Constants.PAUSE_SERVICE_ACTION
+import com.lucassimao.maptrack.util.Constants.REQUEST_CODE_PENDING_INTENT_PAUSE
+import com.lucassimao.maptrack.util.Constants.REQUEST_CODE_PENDING_INTENT_RESUME
 import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.STOP_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.TIMER_UPDATE_INTERVAL_IN_MILLISECONDS
 import com.lucassimao.maptrack.util.ListOfPolylines
 import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
 import com.lucassimao.maptrack.util.calculateElapsedTime
+import com.lucassimao.maptrack.util.getFormattedElapsedTime
+import com.lucassimao.maptrack.util.initializeNotificationChannel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +43,10 @@ class NavigationMapTrackService : LifecycleService() {
     @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+    @Inject
+    lateinit var baseNotification: NotificationCompat.Builder
+
+    private var isFirstTimeRun = true
     private var startTimeInMilliseconds = 0L
     private var previousTime = 0L
     private var currentElapsedTime = 0L
@@ -42,19 +58,21 @@ class NavigationMapTrackService : LifecycleService() {
         var totalExecutionTimeLiveData = MutableLiveData<Long>()
     }
 
-    private fun publishInitialValues() {
-        isTrackingLiveData.postValue(false)
-        listOfPolylinesLiveData.postValue(mutableListOf())
-        totalExecutionTimeLiveData.postValue(0L)
-    }
-
     override fun onCreate() {
         super.onCreate()
+
         publishInitialValues()
 
         isTrackingLiveData.observe(this) {
             startTracking(it)
+            updateNotificationTrackingStatus(it)
         }
+    }
+
+    private fun publishInitialValues() {
+        isTrackingLiveData.postValue(false)
+        listOfPolylinesLiveData.postValue(mutableListOf())
+        totalExecutionTimeLiveData.postValue(0L)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -62,9 +80,14 @@ class NavigationMapTrackService : LifecycleService() {
         intent?.let {
             when (it.action) {
                 START_OR_RESUME_SERVICE_ACTION -> {
-                    isTrackingLiveData.postValue(true)
-                    startTracking(true)
-                    initializeTimer()
+
+                    if (isFirstTimeRun) {
+                        startForegroundService()
+                        isFirstTimeRun = false
+                    } else {
+                        initializeTimer()
+                    }
+
                 }
 
                 PAUSE_SERVICE_ACTION -> {
@@ -75,7 +98,6 @@ class NavigationMapTrackService : LifecycleService() {
                     stopTracking()
                 }
 
-                else -> {}
             }
         }
 
@@ -102,12 +124,77 @@ class NavigationMapTrackService : LifecycleService() {
         }
     }
 
+    private fun updateNotificationTrackingStatus(isTracking: Boolean) {
+
+        val notificationActionLabel =
+            if (isTracking) getString(R.string.pause) else getString(R.string.restart)
+
+        val trackingPendingIntent = if (isTracking) {
+            val pauseIntentAction = Intent(this, NavigationMapTrackService::class.java).apply {
+                action = PAUSE_SERVICE_ACTION
+            }
+            PendingIntent.getService(
+                this,
+                REQUEST_CODE_PENDING_INTENT_PAUSE,
+                pauseIntentAction,
+                FLAG_UPDATE_CURRENT or FLAG_MUTABLE
+            )
+        } else {
+            val resumeIntentAction = Intent(this, NavigationMapTrackService::class.java).apply {
+                action = START_OR_RESUME_SERVICE_ACTION
+            }
+            PendingIntent.getService(
+                this,
+                REQUEST_CODE_PENDING_INTENT_RESUME,
+                resumeIntentAction,
+                FLAG_UPDATE_CURRENT or FLAG_MUTABLE
+            )
+        }
+
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        baseNotification.javaClass.getDeclaredField("mActions").apply {
+            isAccessible = true
+            set(baseNotification, ArrayList<NotificationCompat.Action>())
+        }
+
+        baseNotification.addAction(
+            R.drawable.ic_pause,
+            notificationActionLabel,
+            trackingPendingIntent
+        )
+
+        notificationManager.notify(NOTIFICATION_ID, baseNotification.build())
+
+    }
+
+    private fun startForegroundService() {
+
+        initializeTimer()
+        isTrackingLiveData.postValue(true)
+
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            initializeNotificationChannel(notificationManager)
+        }
+
+        startForeground(NOTIFICATION_ID, baseNotification.build())
+
+        totalExecutionTimeLiveData.observe(this) {
+
+            baseNotification.setContentText(getFormattedElapsedTime(it))
+            notificationManager.notify(NOTIFICATION_ID, baseNotification.build())
+
+        }
+    }
+
     private fun updateTotalExecutionTime(totalTime: Long) {
         totalExecutionTimeLiveData.postValue(totalTime)
+
         if (totalExecutionTimeLiveData.value!! >= lastSecondTime + INTERVAL_IN_SECOND) {
             totalExecutionTimeLiveData.postValue(totalExecutionTimeLiveData.value!! + 1)
             updateLastSecondTime()
-
         }
     }
 
@@ -172,6 +259,9 @@ class NavigationMapTrackService : LifecycleService() {
         pauseTracking()
         publishInitialValues()
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        isFirstTimeRun = true
+        stopForeground(true)
+        stopSelf()
     }
 
 }

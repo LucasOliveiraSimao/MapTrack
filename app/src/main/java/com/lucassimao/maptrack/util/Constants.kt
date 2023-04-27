@@ -20,4 +20,14 @@ object Constants {
     const val TIMER_UPDATE_INTERVAL_IN_MILLISECONDS = 50L
 
     const val INTERVAL_IN_SECOND = 1000L
+
+    const val NOTIFICATION_CHANNEL_ID = "map_track_channel_id"
+    const val NOTIFICATION_CHANNEL_NAME = "map_track_channel_name"
+    const val NOTIFICATION_ID = 1
+
+    const val TRACKING_FRAGMENT_ACTION = "TRACKING_FRAGMENT_ACTION"
+
+    const val REQUEST_CODE_PENDING_INTENT_MODULE = 0
+    const val REQUEST_CODE_PENDING_INTENT_PAUSE = 1
+    const val REQUEST_CODE_PENDING_INTENT_RESUME = 2
 }
