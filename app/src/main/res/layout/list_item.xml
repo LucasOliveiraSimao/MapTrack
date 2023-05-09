@@ -13,8 +13,8 @@
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/img_track"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/img_track" />
 
     <TextView
         android:id="@+id/list_item_date"
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/example_date"
+        tools:text="@string/example_date"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
         app:layout_constraintTop_toTopOf="@+id/list_item_image" />
 
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/example_km"
+        tools:text="@string/example_km"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_date" />
 
@@ -42,8 +42,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/example_time"
+        tools:text="@string/example_time"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_distance" />
+
+    <TextView
+        android:id="@+id/list_item_average_speed"
+        style="@style/TextViewListItemDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        tools:text="@string/example_average_speed"
+        app:layout_constraintStart_toEndOf="@+id/list_item_image"
+        app:layout_constraintTop_toBottomOf="@+id/list_item_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
