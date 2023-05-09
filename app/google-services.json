@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "216580545949",
+    "project_id": "maptrack-ab9b8",
+    "storage_bucket": "maptrack-ab9b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216580545949:android:e744ea796043f578342374",
+        "android_client_info": {
+          "package_name": "com.lucassimao.maptrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216580545949-492cske0cn31d724l8ptho8e1iu4vkdm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7F7gSZgpqYgQIA2SMqS-UUepjWW7OsS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216580545949-492cske0cn31d724l8ptho8e1iu4vkdm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
