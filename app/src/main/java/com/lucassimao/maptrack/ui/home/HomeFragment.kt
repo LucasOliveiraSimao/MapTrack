@@ -33,8 +33,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViewModel()
+
+        binding.fabNewRoute.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_mapsFragment)
+        }
+
+    }
+
+    private fun initViewModel() {
         viewModel.getAllRoutes.observe(viewLifecycleOwner) {
-            if (it != null){
+            if (it != null) {
                 initRecyclerView(it)
             }
         }
@@ -56,11 +65,6 @@ class HomeFragment : Fragment() {
                 binding.includeCardHome.contentCardTotalTime.text = timeFormat
             }
         }
-
-        binding.fabNewRoute.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_mapsFragment)
-        }
-
     }
 
     private fun initRecyclerView(listOfRoutes: List<RouteEntity>) {
