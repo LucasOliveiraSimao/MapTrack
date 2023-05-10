@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.lucassimao.maptrack.R
 import com.lucassimao.maptrack.data.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
-import com.lucassimao.maptrack.service.NavigationMapTrackService
+import com.lucassimao.maptrack.service.MapTrackService
 import com.lucassimao.maptrack.util.Constants
 import com.lucassimao.maptrack.util.Constants.GOOGLE_MAPS_CAMERA_ZOOM_VALUE
 import com.lucassimao.maptrack.util.Constants.PAUSE_SERVICE_ACTION
@@ -25,6 +25,7 @@ import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.ListOfLocations
 import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
 import com.lucassimao.maptrack.util.buildPolylineOption
+import com.lucassimao.maptrack.util.calculateAverageSpeed
 import com.lucassimao.maptrack.util.calculateRouteDistance
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
 import com.lucassimao.maptrack.util.metersToKilometers
@@ -41,7 +42,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private val viewModel by viewModels<RouteViewModel>()
 
     private var routePolylines = mutableListOf<ListOfLocations>()
-    private var service = NavigationMapTrackService
+    private var service = MapTrackService
     private var map: GoogleMap? = null
     private var totalExecutionTime = 0L
 
@@ -103,6 +104,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 distanceTraveledInKM,
                 totalExecutionTime
             )
+
             viewModel.insertRoute(route)
 
             finalizeRun()
@@ -114,10 +116,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private fun finalizeRun(){
         sendCommandToService(Constants.STOP_SERVICE_ACTION)
         findNavController().navigate(R.id.action_mapsFragment_to_homeFragment)
-    }
-
-    private fun calculateAverageSpeed(metersToKilometers: Float, millisToHours: Float): Float {
-        return metersToKilometers / millisToHours
     }
 
     private fun toggleButtonText() {
@@ -147,12 +145,12 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             addLastedPolyline()
             moveCameraToUserLocationWithZoom()
         }
+
         service.totalExecutionTimeLiveData.observe(viewLifecycleOwner) {
             totalExecutionTime = it
             binding.timeCounter.text = getFormattedElapsedTime(it)
         }
     }
-
 
     private fun moveCameraToUserLocationWithZoom() {
         if (routePolylines.isNotEmpty() && routePolylines.last().isNotEmpty()) {
@@ -183,11 +181,13 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun getRouteBounds(routePolylines: MutableList<ListOfLocations>): LatLngBounds {
         val boundsBuilder = LatLngBounds.Builder()
+
         for (polyline in routePolylines) {
             for (point in polyline) {
                 boundsBuilder.include(point)
             }
         }
+
         return boundsBuilder.build()
     }
 
@@ -213,7 +213,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun sendCommandToService(action: String) {
-        Intent(requireContext(), NavigationMapTrackService::class.java).also { intent ->
+        Intent(requireContext(), MapTrackService::class.java).also { intent ->
             intent.action = action
             requireContext().startService(intent)
         }
@@ -227,7 +227,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             EasyPermissions.requestPermissions(
                 this,
-                "Voce precisa aceitar a permissão de notificação e localização",
+                getString(R.string.android_13_permission_message),
                 PERMISSION_REQUEST_CODE,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
