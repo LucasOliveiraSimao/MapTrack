@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NavigationMapTrackService : LifecycleService() {
+class MapTrackService : LifecycleService() {
 
     @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -132,9 +132,10 @@ class NavigationMapTrackService : LifecycleService() {
             if (isTracking) getString(R.string.pause) else getString(R.string.restart)
 
         val trackingPendingIntent = if (isTracking) {
-            val pauseIntentAction = Intent(this, NavigationMapTrackService::class.java).apply {
+            val pauseIntentAction = Intent(this, MapTrackService::class.java).apply {
                 action = PAUSE_SERVICE_ACTION
             }
+
             PendingIntent.getService(
                 this,
                 REQUEST_CODE_PENDING_INTENT_PAUSE,
@@ -142,9 +143,10 @@ class NavigationMapTrackService : LifecycleService() {
                 FLAG_UPDATE_CURRENT or FLAG_MUTABLE
             )
         } else {
-            val resumeIntentAction = Intent(this, NavigationMapTrackService::class.java).apply {
+            val resumeIntentAction = Intent(this, MapTrackService::class.java).apply {
                 action = START_OR_RESUME_SERVICE_ACTION
             }
+
             PendingIntent.getService(
                 this,
                 REQUEST_CODE_PENDING_INTENT_RESUME,

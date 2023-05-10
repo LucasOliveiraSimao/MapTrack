@@ -29,4 +29,5 @@
     <string name="total_distance_format">%1$s Km</string>
     <string name="average_speed_format">%1$s Km/h</string>
     <string name="time_format">Tempo: %1$s</string>
+    <string name="android_13_permission_message">Voce precisa aceitar a permissão de notificação e localização</string>
 </resources>
