@@ -3,8 +3,8 @@
 
     <!--    Content Card Home-->
     <string name="total_distance">Distância Total</string>
-    <string name="total_km">135,20 km</string>
-    <string name="total_time">155,30 min</string>
+    <string name="total_km">0 km</string>
+    <string name="total_time">0</string>
     <string name="total_calories">3215 kcal</string>
     <!--    Content Card Home-->
 
@@ -12,15 +12,21 @@
     <string name="example_date">15/08/23</string>
     <string name="example_km">1,24 km</string>
     <string name="example_time">54 min</string>
+    <string name="example_average_speed">2 Km/h</string>
     <string name="your_routes">Seus Trajetos</string>
     <!--  List Item  -->
 
     <!--  Maps  -->
     <string name="time_counter">00:00:00</string>
     <string name="start">Começar</string>
-    <string name="restart">Recomeçar</string>
+    <string name="restart">Continuar</string>
     <string name="you_need_to_accept_location_permissions_to_use_this_app">Você precisa aceitar as permissões de localização para usar este aplicativo</string>
     <string name="pause">Parar</string>
     <string name="finish">Finalizar</string>
     <!--  Maps  -->
+    
+    <string name="distance_format">Distância: %1$s Km</string>
+    <string name="total_distance_format">%1$s Km</string>
+    <string name="average_speed_format">%1$s Km/h</string>
+    <string name="time_format">Tempo: %1$s</string>
 </resources>

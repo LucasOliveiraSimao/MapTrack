@@ -28,10 +28,10 @@
             style="@style/TextViewHomeDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/total_km"
             app:layout_constraintEnd_toEndOf="@+id/textView"
             app:layout_constraintStart_toStartOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:text="@string/total_km" />
 
         <ImageView
             android:id="@+id/imageView5"
@@ -48,11 +48,11 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_time_filled_24"
+            android:src="@drawable/ic_time"
             app:layout_constraintBaseline_toBottomOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/content_card_total_time"
             app:layout_constraintEnd_toStartOf="@+id/content_card_total_time"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/imageView5"
             app:layout_constraintTop_toTopOf="@+id/content_card_total_time"
             tools:ignore="ContentDescription" />
 
@@ -61,37 +61,13 @@
             style="@style/TextViewHomeDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/total_time"
+            android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/content_card_total_calories"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="@+id/imageView5"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/imageView5"
-            tools:ignore="MissingConstraints" />
-
-        <ImageView
-            android:id="@+id/content_card_total_calories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_calories"
-            app:layout_constraintBottom_toBottomOf="@+id/textView3"
-            app:layout_constraintEnd_toStartOf="@+id/textView3"
-            app:layout_constraintStart_toEndOf="@+id/content_card_total_time"
-            app:layout_constraintTop_toTopOf="@+id/textView3"
-            tools:ignore="ContentDescription,MissingConstraints" />
-
-        <TextView
-            android:id="@+id/textView3"
-            style="@style/TextViewHomeDefault"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/total_calories"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/content_card_total_calories"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            android:text="@string/total_time" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

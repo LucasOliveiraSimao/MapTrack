@@ -52,6 +52,8 @@ class NavigationMapTrackService : LifecycleService() {
     private var currentElapsedTime = 0L
     private var lastSecondTime = 0L
 
+    private var isServiceKilled = false
+
     companion object {
         val listOfPolylinesLiveData = MutableLiveData<ListOfPolylines>()
         var isTrackingLiveData = MutableLiveData<Boolean>()
@@ -158,13 +160,15 @@ class NavigationMapTrackService : LifecycleService() {
             set(baseNotification, ArrayList<NotificationCompat.Action>())
         }
 
-        baseNotification.addAction(
-            R.drawable.ic_pause,
-            notificationActionLabel,
-            trackingPendingIntent
-        )
+        if (!isServiceKilled) {
+            baseNotification.addAction(
+                R.drawable.ic_pause,
+                notificationActionLabel,
+                trackingPendingIntent
+            )
 
-        notificationManager.notify(NOTIFICATION_ID, baseNotification.build())
+            notificationManager.notify(NOTIFICATION_ID, baseNotification.build())
+        }
 
     }
 
@@ -183,8 +187,10 @@ class NavigationMapTrackService : LifecycleService() {
 
         totalExecutionTimeLiveData.observe(this) {
 
-            baseNotification.setContentText(getFormattedElapsedTime(it))
-            notificationManager.notify(NOTIFICATION_ID, baseNotification.build())
+            if (!isServiceKilled) {
+                baseNotification.setContentText(getFormattedElapsedTime(it))
+                notificationManager.notify(NOTIFICATION_ID, baseNotification.build())
+            }
 
         }
     }
@@ -255,12 +261,11 @@ class NavigationMapTrackService : LifecycleService() {
     }
 
     private fun stopTracking() {
-        isTrackingLiveData.postValue(false)
-        pauseTracking()
+        isServiceKilled = true
+        isFirstTimeRun = true
         publishInitialValues()
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-        isFirstTimeRun = true
-        stopForeground(true)
+        stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
