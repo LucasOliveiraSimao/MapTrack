@@ -9,7 +9,6 @@ coroutines = "1.6.4"
 navigation = "2.5.3"
 glide = "4.14.2"
 hilt = "2.45"
-mpAndroidChart = "v3.1.0"
 play_services_maps = "18.1.0"
 play-services-location = "21.0.1"
 easy_permission = "3.0.0"
@@ -18,7 +17,9 @@ test_ext = "1.1.5"
 espresso = "3.5.1"
 firebase_analytics = "21.2.2"
 firebase_crashlytics = "18.3.7"
-
+mockk = "1.13.5"
+core_testing = "2.1.0"
+test_core = "1.5.0"
 
 [libraries]
 core = { module = "androidx.core:core-ktx", version.ref = "core" }
@@ -49,8 +50,6 @@ hiltCompiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt
 playServicesMaps = { module = "com.google.android.gms:play-services-maps", version.ref = "play_services_maps" }
 playServicesLocation = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 
-mpAndroidChart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpAndroidChart" }
-
 easypermission = { module = "pub.devrel:easypermissions", version.ref = "easy_permission" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -59,3 +58,13 @@ espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "esp
 
 firebaseAnalytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase_analytics" }
 firebaseCrashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase_crashlytics" }
+
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockkAndroid = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+mockkAgent = { module = "io.mockk:mockk-agent", version.ref = "mockk" }
+
+coreTesting = { module = "androidx.arch.core:core-testing", version.ref = "core_testing" }
+
+coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+testCore = { module = "androidx.test:core-ktx", version.ref = "test_core" }

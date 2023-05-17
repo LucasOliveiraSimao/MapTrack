@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
 
         viewModel.getTotalDistance.observe(viewLifecycleOwner) {
             if (it != null) {
-                val distanceFormat = formatFloatToTwoDecimalPlaces(it)
+                val distanceFormat = formatFloatToTwoDecimalPlaces(it.toFloat())
                 val distanceString = getString(
                     R.string.total_distance_format,
                     distanceFormat

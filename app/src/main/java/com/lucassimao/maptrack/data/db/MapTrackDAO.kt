@@ -17,7 +17,7 @@ interface MapTrackDAO {
     fun getAllRoutes(): LiveData<List<RouteEntity>>
 
     @Query("SELECT SUM(distanceTraveledInKM) FROM route_table")
-    fun getTotalDistance(): LiveData<Float>
+    fun getTotalDistance(): LiveData<Double>
 
     @Query("SELECT SUM(totalExecutionTime) FROM route_table")
     fun getTotalExecutionTime(): LiveData<Long>

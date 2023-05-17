@@ -33,7 +33,7 @@ class RouteViewHolder(private val binding: ListItemBinding) :
     fun bind(route: RouteEntity) {
         binding.apply {
 
-            val distanceFormatFloat = formatFloatToTwoDecimalPlaces(route.distanceTraveledInKM)
+            val distanceFormatFloat = formatFloatToTwoDecimalPlaces(route.distanceTraveledInKM.toFloat())
             val averageSpeedFormatFloat = formatFloatToTwoDecimalPlaces(route.averageSpeed)
             val timeFormat = getFormattedElapsedTime(route.totalExecutionTime)
 

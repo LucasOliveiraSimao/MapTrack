@@ -94,7 +94,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             millisToHours(totalExecutionTime)
         )
 
-        val distanceTraveledInKM: Float = metersToKilometers(distanceTraveledInMeters)
+        val distanceTraveledInKM = metersToKilometers(distanceTraveledInMeters).toDouble()
 
         map?.snapshot { bitmap ->
             val route = RouteEntity(
