@@ -9,7 +9,7 @@ data class RouteEntity(
     val image: Bitmap? = null,
     val currentDateInMillis: Long = 0L,
     val averageSpeed: Float = 0f,
-    val distanceTraveledInKM: Float = 0f,
+    val distanceTraveledInKM: Double = 0.0,
     val totalExecutionTime: Long = 0L
 ) {
     @PrimaryKey(autoGenerate = true)
