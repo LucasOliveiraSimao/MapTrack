@@ -39,6 +39,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -66,8 +69,6 @@ dependencies {
     implementation libs.playServicesMaps
     implementation libs.playServicesLocation
 
-    implementation libs.mpAndroidChart
-
     implementation libs.core
     implementation libs.appCompat
     implementation libs.material
@@ -78,7 +79,19 @@ dependencies {
     implementation libs.firebaseAnalytics
     implementation libs.firebaseCrashlytics
 
+    implementation libs.testCore
+
     testImplementation libs.junit
+
+    testImplementation libs.coreTesting
+
+    testImplementation libs.coroutinesTest
+
+    testImplementation libs.mockk
+    testImplementation libs.mockkAndroid
+    testImplementation libs.mockkAgent
+
     androidTestImplementation libs.testExt
     androidTestImplementation libs.espresso
+    androidTestImplementation libs.coreTesting
 }
