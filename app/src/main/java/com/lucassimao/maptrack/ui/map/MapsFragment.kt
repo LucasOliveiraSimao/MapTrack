@@ -1,4 +1,4 @@
-package com.lucassimao.maptrack.ui
+package com.lucassimao.maptrack.ui.map
 
 import android.Manifest
 import android.content.Intent
@@ -14,9 +14,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
 import com.lucassimao.maptrack.R
-import com.lucassimao.maptrack.data.RouteEntity
+import com.lucassimao.maptrack.data.model.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
 import com.lucassimao.maptrack.service.MapTrackService
+import com.lucassimao.maptrack.ui.home.RouteViewModel
 import com.lucassimao.maptrack.util.Constants
 import com.lucassimao.maptrack.util.Constants.GOOGLE_MAPS_CAMERA_ZOOM_VALUE
 import com.lucassimao.maptrack.util.Constants.PAUSE_SERVICE_ACTION
@@ -27,6 +28,7 @@ import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
 import com.lucassimao.maptrack.util.buildPolylineOption
 import com.lucassimao.maptrack.util.calculateAverageSpeed
 import com.lucassimao.maptrack.util.calculateRouteDistance
+import com.lucassimao.maptrack.util.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
 import com.lucassimao.maptrack.util.metersToKilometers
 import com.lucassimao.maptrack.util.millisToHours
@@ -81,6 +83,34 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     }
 
+    private fun displayDistanceTraveled(): String {
+        var distanceTraveledInMeters = 0.0f
+
+        for (route in routePolylines) {
+            distanceTraveledInMeters += calculateRouteDistance(route)
+        }
+
+        val distanceTraveledInKm = metersToKilometers(distanceTraveledInMeters)
+
+        return formatFloatToTwoDecimalPlaces(distanceTraveledInKm)
+    }
+
+    private fun displayAverageSpeed(): String {
+        var distanceTraveledInMeters = 0.0f
+
+        for (route in routePolylines) {
+            distanceTraveledInMeters += calculateRouteDistance(route)
+        }
+
+        val averageSpeed: Float = calculateAverageSpeed(
+            metersToKilometers(distanceTraveledInMeters),
+            millisToHours(totalExecutionTime)
+        )
+
+        return formatFloatToTwoDecimalPlaces(averageSpeed)
+    }
+
+
     private fun finalizeAndSaveRunData() {
         var distanceTraveledInMeters = 0.0f
         val currentTimeInMillis = Calendar.getInstance().timeInMillis
@@ -113,7 +143,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     }
 
-    private fun finalizeRun(){
+    private fun finalizeRun() {
         sendCommandToService(Constants.STOP_SERVICE_ACTION)
         findNavController().navigate(R.id.action_mapsFragment_to_homeFragment)
     }
@@ -141,6 +171,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private fun setupService() {
         service.listOfPolylinesLiveData.observe(viewLifecycleOwner) {
             routePolylines = it
+            binding.distanceTraveled.text = getString(R.string.distance_traveled_format, displayDistanceTraveled())
             addAllPolylines()
             addLastedPolyline()
             moveCameraToUserLocationWithZoom()
@@ -148,6 +179,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         service.totalExecutionTimeLiveData.observe(viewLifecycleOwner) {
             totalExecutionTime = it
+            binding.averageSpeed.text = getString(R.string.average_speed_format, displayAverageSpeed())
             binding.timeCounter.text = getFormattedElapsedTime(it)
         }
     }
