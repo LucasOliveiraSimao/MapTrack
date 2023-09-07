@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lucassimao.maptrack.R
-import com.lucassimao.maptrack.data.RouteEntity
+import com.lucassimao.maptrack.data.model.RouteEntity
 import com.lucassimao.maptrack.databinding.ListItemBinding
 import com.lucassimao.maptrack.util.formatDate
 import com.lucassimao.maptrack.util.formatFloatToTwoDecimalPlaces

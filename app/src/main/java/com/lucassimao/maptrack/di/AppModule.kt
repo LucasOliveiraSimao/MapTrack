@@ -2,7 +2,7 @@ package com.lucassimao.maptrack.di
 
 import com.lucassimao.maptrack.data.RouteRepository
 import com.lucassimao.maptrack.data.db.MapTrackDAO
-import com.lucassimao.maptrack.ui.RouteViewModel
+import com.lucassimao.maptrack.ui.home.RouteViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
