@@ -24,7 +24,7 @@ import com.lucassimao.maptrack.util.Constants.PAUSE_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.PERMISSION_REQUEST_CODE
 import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.ListOfLocations
-import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
+import com.lucassimao.maptrack.util.PermissionUtil
 import com.lucassimao.maptrack.util.buildPolylineOption
 import com.lucassimao.maptrack.util.calculateAverageSpeed
 import com.lucassimao.maptrack.util.calculateRouteDistance
@@ -32,6 +32,7 @@ import com.lucassimao.maptrack.util.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
 import com.lucassimao.maptrack.util.metersToKilometers
 import com.lucassimao.maptrack.util.millisToHours
+import com.lucassimao.maptrack.util.showPermissionDialog
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -55,8 +56,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     ): View {
         binding = FragmentMapsBinding.inflate(layoutInflater)
 
-        requestPermissions()
-
         binding.mapView.onCreate(savedInstanceState)
 
         return binding.root
@@ -64,6 +63,15 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (PermissionUtil.hasLocationPermissions(requireContext())) {
+            return
+        }else{
+            showPermissionDialog(
+                { requestPermissions() },
+                { binding.btnToggle.isEnabled = false }
+            )
+        }
 
         binding.btnToggle.setOnClickListener {
             toggleButtonText()
@@ -171,7 +179,8 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private fun setupService() {
         service.listOfPolylinesLiveData.observe(viewLifecycleOwner) {
             routePolylines = it
-            binding.distanceTraveled.text = getString(R.string.distance_traveled_format, displayDistanceTraveled())
+            binding.distanceTraveled.text =
+                getString(R.string.distance_traveled_format, displayDistanceTraveled())
             addAllPolylines()
             addLastedPolyline()
             moveCameraToUserLocationWithZoom()
@@ -179,7 +188,8 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         service.totalExecutionTimeLiveData.observe(viewLifecycleOwner) {
             totalExecutionTime = it
-            binding.averageSpeed.text = getString(R.string.average_speed_format, displayAverageSpeed())
+            binding.averageSpeed.text =
+                getString(R.string.average_speed_format, displayAverageSpeed())
             binding.timeCounter.text = getFormattedElapsedTime(it)
         }
     }
@@ -252,32 +262,17 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun requestPermissions() {
-        if (hasLocationPermissions(requireContext())) {
-            return
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.android_13_permission_message),
                 PERMISSION_REQUEST_CODE,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.FOREGROUND_SERVICE,
                 Manifest.permission.POST_NOTIFICATIONS
             )
 
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.you_need_to_accept_location_permissions_to_use_this_app),
-                PERMISSION_REQUEST_CODE,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.FOREGROUND_SERVICE
-            )
         } else {
             EasyPermissions.requestPermissions(
                 this,

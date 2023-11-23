@@ -31,4 +31,6 @@
     <string name="average_speed_format">%1$s Km/h</string>
     <string name="time_format">Tempo: %1$s</string>
     <string name="android_13_permission_message">Voce precisa aceitar a permissão de notificação e localização</string>
+    <string name="permission_required">Permissão necessária:</string>
+    <string name="notice_about_location_permission">Este aplicativo coleta dados de localização para registrar o seu trajeto, coletando informações de localização em tempo real. Essas informações são usadas para fornecer funcionalidades relacionadas à localização, como navegação e estatísticas. A coleta de dados de localização ocorre tanto quando o aplicativo está em primeiro plano quanto em segundo plano, garantindo uma experiência contínua e abrangente</string>
 </resources>
