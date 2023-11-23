@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.lucassimao.maptrack.ui.MapsFragment"
+        android:name="com.lucassimao.maptrack.ui.map.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps">
         <action

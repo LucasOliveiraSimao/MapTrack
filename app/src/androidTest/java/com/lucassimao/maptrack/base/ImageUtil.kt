@@ -1,4 +1,4 @@
-package com.lucassimao.maptrack.utilTest
+package com.lucassimao.maptrack.base
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable

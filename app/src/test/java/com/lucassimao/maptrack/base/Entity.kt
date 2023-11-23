@@ -1,7 +1,7 @@
-package com.lucassimao.maptrack.utilUnitTest
+package com.lucassimao.maptrack.base
 
 import android.graphics.Bitmap
-import com.lucassimao.maptrack.data.RouteEntity
+import com.lucassimao.maptrack.data.model.RouteEntity
 import io.mockk.mockk
 
 object Entity {

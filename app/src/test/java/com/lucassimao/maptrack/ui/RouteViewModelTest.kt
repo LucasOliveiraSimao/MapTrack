@@ -2,12 +2,13 @@ package com.lucassimao.maptrack.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.lucassimao.maptrack.data.RouteRepository
-import com.lucassimao.maptrack.utilUnitTest.Entity.routeEntity
-import com.lucassimao.maptrack.utilUnitTest.Entity.routeList
-import com.lucassimao.maptrack.utilUnitTest.Entity.totalDistance
-import com.lucassimao.maptrack.utilUnitTest.Entity.totalTime
-import com.lucassimao.maptrack.utilUnitTest.MainCoroutineScopeRule
-import com.lucassimao.maptrack.utilUnitTest.getValueForTest
+import com.lucassimao.maptrack.ui.home.RouteViewModel
+import com.lucassimao.maptrack.base.Entity.routeEntity
+import com.lucassimao.maptrack.base.Entity.routeList
+import com.lucassimao.maptrack.base.Entity.totalDistance
+import com.lucassimao.maptrack.base.Entity.totalTime
+import com.lucassimao.maptrack.base.MainCoroutineScopeRule
+import com.lucassimao.maptrack.base.getValueForTest
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk

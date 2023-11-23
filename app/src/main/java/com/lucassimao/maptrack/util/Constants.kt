@@ -7,6 +7,8 @@ object Constants {
 
     const val PERMISSION_REQUEST_CODE = 123
 
+    const val KEY_PERMISSION_ACCEPTED = "PermissionAccepted"
+
     const val START_OR_RESUME_SERVICE_ACTION = "START_OR_RESUME_SERVICE_ACTION"
     const val PAUSE_SERVICE_ACTION = "PAUSE_SERVICE_ACTION"
     const val STOP_SERVICE_ACTION = "STOP_SERVICE_ACTION"

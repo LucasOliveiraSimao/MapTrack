@@ -46,7 +46,7 @@ object NotificationModule {
     )
         .setAutoCancel(false)
         .setOngoing(true)
-        .setSmallIcon(R.drawable.ic_run)
+        .setSmallIcon(R.drawable.ic_bike)
         .setContentText("00:00:00")
         .setContentIntent(pendingIntent)
 }
