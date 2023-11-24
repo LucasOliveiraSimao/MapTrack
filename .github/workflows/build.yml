@@ -22,7 +22,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: echo '${{ secrets.SDK_LOCATION }}' > D:\a\MapTrack\MapTrack\local.properties
+        run: echo '${{ secrets.SDK_LOCATION }}' > D:\a\MapTrack\MapTrack\local.properties && echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> D:\a\MapTrack\MapTrack\local.properties
 
       - name: Run lint
         run: ./gradlew lintDebug
@@ -35,6 +35,7 @@ jobs:
 
 
   unit-test:
+    needs: [lint]
     name: Unit Test
     runs-on: windows-latest
     steps:
