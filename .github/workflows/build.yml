@@ -22,7 +22,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: echo "sdk.dir=C\:\\Users\\Lucas\\AppData\\Local\\Android\\Sdk" > D:\a\MapTrack\MapTrack\local.properties
+        run: echo '${{ secrets.SDK_LOCATION }}' > D:\a\MapTrack\MapTrack\local.properties
 
       - name: Run lint
         run: ./gradlew lintDebug
