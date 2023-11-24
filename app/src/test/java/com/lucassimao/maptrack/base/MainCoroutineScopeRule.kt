@@ -1,4 +1,4 @@
-package com.lucassimao.maptrack.utilUnitTest
+package com.lucassimao.maptrack.base
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

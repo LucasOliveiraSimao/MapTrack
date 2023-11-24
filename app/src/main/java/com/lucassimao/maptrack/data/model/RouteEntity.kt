@@ -1,4 +1,4 @@
-package com.lucassimao.maptrack.data
+package com.lucassimao.maptrack.data.model
 
 import android.graphics.Bitmap
 import androidx.room.Entity

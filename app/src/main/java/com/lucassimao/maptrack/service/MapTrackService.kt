@@ -12,7 +12,10 @@ import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import com.lucassimao.maptrack.R
 import com.lucassimao.maptrack.util.Constants.FASTEST_INTERVAL_TIME
@@ -56,8 +59,8 @@ class MapTrackService : LifecycleService() {
 
     companion object {
         val listOfPolylinesLiveData = MutableLiveData<ListOfPolylines>()
-        var isTrackingLiveData = MutableLiveData<Boolean>()
-        var totalExecutionTimeLiveData = MutableLiveData<Long>()
+        val isTrackingLiveData = MutableLiveData<Boolean>()
+        val totalExecutionTimeLiveData = MutableLiveData<Long>()
     }
 
     override fun onCreate() {
@@ -65,9 +68,9 @@ class MapTrackService : LifecycleService() {
 
         publishInitialValues()
 
-        isTrackingLiveData.observe(this) {
-            startTracking(it)
-            updateNotificationTrackingStatus(it)
+        isTrackingLiveData.observe(this) { isTracking ->
+            startTracking(isTracking)
+            updateNotificationTrackingStatus(isTracking)
         }
     }
 
@@ -78,18 +81,15 @@ class MapTrackService : LifecycleService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         intent?.let {
             when (it.action) {
                 START_OR_RESUME_SERVICE_ACTION -> {
-
                     if (isFirstTimeRun) {
                         startForegroundService()
                         isFirstTimeRun = false
                     } else {
                         initializeTimer()
                     }
-
                 }
 
                 PAUSE_SERVICE_ACTION -> {
@@ -99,7 +99,6 @@ class MapTrackService : LifecycleService() {
                 STOP_SERVICE_ACTION -> {
                     stopTracking()
                 }
-
             }
         }
 
@@ -107,14 +106,12 @@ class MapTrackService : LifecycleService() {
     }
 
     private fun initializeTimer() {
-
         createEmptyPolylines()
         isTrackingLiveData.postValue(true)
         startTimeInMilliseconds = System.currentTimeMillis()
 
         CoroutineScope(Dispatchers.Main).launch {
             while (isTrackingLiveData.value!!) {
-
                 currentElapsedTime = calculateElapsedTime(startTimeInMilliseconds)
                 val totalTime = previousTime + currentElapsedTime
 
@@ -127,7 +124,6 @@ class MapTrackService : LifecycleService() {
     }
 
     private fun updateNotificationTrackingStatus(isTracking: Boolean) {
-
         val notificationActionLabel =
             if (isTracking) getString(R.string.pause) else getString(R.string.restart)
 
@@ -171,11 +167,9 @@ class MapTrackService : LifecycleService() {
 
             notificationManager.notify(NOTIFICATION_ID, baseNotification.build())
         }
-
     }
 
     private fun startForegroundService() {
-
         initializeTimer()
         isTrackingLiveData.postValue(true)
 
@@ -188,12 +182,10 @@ class MapTrackService : LifecycleService() {
         startForeground(NOTIFICATION_ID, baseNotification.build())
 
         totalExecutionTimeLiveData.observe(this) {
-
             if (!isServiceKilled) {
                 baseNotification.setContentText(getFormattedElapsedTime(it))
                 notificationManager.notify(NOTIFICATION_ID, baseNotification.build())
             }
-
         }
     }
 
@@ -233,10 +225,8 @@ class MapTrackService : LifecycleService() {
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             if (isTrackingLiveData.value!!) {
-                locationResult.locations.let { routeLocation ->
-                    for (location in routeLocation) {
-                        addLocationToPath(location)
-                    }
+                locationResult.locations.forEach { location ->
+                    addLocationToPath(location)
                 }
             }
         }
@@ -267,7 +257,7 @@ class MapTrackService : LifecycleService() {
         isFirstTimeRun = true
         publishInitialValues()
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopForeground(true)
         stopSelf()
     }
 

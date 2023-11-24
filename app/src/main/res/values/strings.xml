@@ -2,32 +2,35 @@
     <string name="app_name">MapTrack</string>
 
     <!--    Content Card Home-->
-    <string name="total_distance">Distância Total</string>
-    <string name="total_km">0 km</string>
-    <string name="total_time">0</string>
-    <string name="total_calories">3215 kcal</string>
+    <string name="content_card_total_distance">Distância Total</string>
+    <string name="content_card_total_km">0 km</string>
+    <string name="content_card_total_time">00:00:00</string>
     <!--    Content Card Home-->
 
     <!--  List Item  -->
-    <string name="example_date">15/08/23</string>
-    <string name="example_km">1,24 km</string>
-    <string name="example_time">54 min</string>
-    <string name="example_average_speed">2 Km/h</string>
-    <string name="your_routes">Seus Trajetos</string>
+    <string name="list_item_date">15/08/23</string>
+    <string name="list_item_distance">1.24 km</string>
+    <string name="list_item_time">00:54:00</string>
+    <string name="list_item_avg_speed">2 Km/h</string>
     <!--  List Item  -->
 
     <!--  Maps  -->
-    <string name="time_counter">00:00:00</string>
+    <string name="maps_time_counter">00:00:00</string>
     <string name="start">Começar</string>
     <string name="restart">Continuar</string>
     <string name="you_need_to_accept_location_permissions_to_use_this_app">Você precisa aceitar as permissões de localização para usar este aplicativo</string>
     <string name="pause">Parar</string>
     <string name="finish">Finalizar</string>
+    <string name="maps_distance_traveled">0.00 Km</string>
+    <string name="maps_average_speed">0.00 Km/h</string>
     <!--  Maps  -->
     
     <string name="distance_format">Distância: %1$s Km</string>
+    <string name="distance_traveled_format">%1$s Km</string>
     <string name="total_distance_format">%1$s Km</string>
     <string name="average_speed_format">%1$s Km/h</string>
     <string name="time_format">Tempo: %1$s</string>
     <string name="android_13_permission_message">Voce precisa aceitar a permissão de notificação e localização</string>
+    <string name="permission_required">Permissão necessária:</string>
+    <string name="notice_about_location_permission">Este aplicativo coleta dados de localização para registrar o seu trajeto, coletando informações de localização em tempo real. Essas informações são usadas para fornecer funcionalidades relacionadas à localização, como navegação e estatísticas. A coleta de dados de localização ocorre tanto quando o aplicativo está em primeiro plano quanto em segundo plano, garantindo uma experiência contínua e abrangente</string>
 </resources>

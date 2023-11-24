@@ -1,9 +1,9 @@
-package com.lucassimao.maptrack.ui
+package com.lucassimao.maptrack.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lucassimao.maptrack.data.RouteEntity
 import com.lucassimao.maptrack.data.RouteRepository
+import com.lucassimao.maptrack.data.model.RouteEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

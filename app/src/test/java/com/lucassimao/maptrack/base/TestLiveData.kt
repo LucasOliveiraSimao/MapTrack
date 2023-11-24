@@ -1,4 +1,4 @@
-package com.lucassimao.maptrack.utilUnitTest
+package com.lucassimao.maptrack.base
 
 import androidx.lifecycle.LiveData
 import java.util.concurrent.atomic.AtomicReference

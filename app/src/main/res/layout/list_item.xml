@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="@string/example_date"
+        tools:text="@string/list_item_date"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
         app:layout_constraintTop_toTopOf="@+id/list_item_image" />
 
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="@string/example_km"
+        tools:text="@string/list_item_distance"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_date" />
 
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="@string/example_time"
+        tools:text="@string/list_item_time"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_distance" />
 
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="@string/example_average_speed"
+        tools:text="@string/list_item_avg_speed"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_time" />
 

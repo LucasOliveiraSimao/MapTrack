@@ -1,3 +1,4 @@
 /build
 keystore.properties
 service-account.json
+release/output-metadata.json
