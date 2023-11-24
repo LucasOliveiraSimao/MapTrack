@@ -25,7 +25,6 @@ android {
 
     buildTypes {
         release {
-            resValue("string", "maps_api_key", project.hasProperty("MAPS_API_KEY") ? project.MAPS_API_KEY : "")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
