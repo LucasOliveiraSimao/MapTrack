@@ -21,6 +21,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Create local.properties
+        run: echo "sdk.dir=${{ secrets.SDK_LOCATION }}" > local.properties
+
       - name: Run lint
         run: ./gradlew lintDebug
 
@@ -29,6 +32,7 @@ jobs:
         with:
           name: lint-results-debug.html
           path: app/build/reports/lint-results-debug.html
+
 
   unit-test:
     needs: [lint]
@@ -57,9 +61,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+      - name: Create local.properties
+        run: echo "sdk.dir=C\:\\Users\\Lucas\\AppData\\Local\\Android\\Sdk" > D:\a\MapTrack\MapTrack\local.properties
 
       - name: Run tests
-        run: bash ./gradlew test
+        run: ./gradlew test
 
       - name: Upload unit test report
         uses: actions/upload-artifact@v2
