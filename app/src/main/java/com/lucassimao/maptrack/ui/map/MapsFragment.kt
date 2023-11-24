@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.lucassimao.maptrack.R
 import com.lucassimao.maptrack.data.model.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
@@ -66,7 +67,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         if (PermissionUtil.hasLocationPermissions(requireContext())) {
             return
-        }else{
+        } else {
             showPermissionDialog(
                 { requestPermissions() },
                 { binding.btnToggle.isEnabled = false }
@@ -80,6 +81,12 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         binding.mapView.getMapAsync {
             map = it
+            map?.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    requireContext(),
+                    R.raw.style_map
+                )
+            )
         }
 
         binding.btnFinish.setOnClickListener {

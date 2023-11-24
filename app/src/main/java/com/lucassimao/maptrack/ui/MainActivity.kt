@@ -1,8 +1,8 @@
 package com.lucassimao.maptrack.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.lucassimao.maptrack.R
@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         navigateToMapsFragment(intent)
 
     }
+
 
     private fun navigateToMapsFragment(intent: Intent?) {
         if (intent?.action == TRACKING_FRAGMENT_ACTION) {
