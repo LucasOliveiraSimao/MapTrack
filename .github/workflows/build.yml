@@ -22,8 +22,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: echo '${{ secrets.SDK_LOCATION }}' > /home/runner/work/MapTrack/MapTrack/local.properties && echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> /home/runner/work/MapTrack/MapTrack/app/src/main/AndroidManifest.xml
-
+        run: echo "sdk.dir=${{ secrets.SDK_LOCATION }}" > local.properties
 
       - name: Run lint
         run: ./gradlew lintDebug
