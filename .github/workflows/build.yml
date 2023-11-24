@@ -22,7 +22,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: echo "sdk.dir=${{ secrets.SDK_LOCATION }}" > local.properties
+        run: echo "sdk.dir=${{ secrets.SDK_LOCATION }}" > local.properties && echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> local.properties
 
       - name: Run lint
         run: ./gradlew lintDebug
