@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run tests
-        run: bash ./gradlew test
+        run: ./gradlew test
 
       - name: Upload unit test report
         uses: actions/upload-artifact@v2
