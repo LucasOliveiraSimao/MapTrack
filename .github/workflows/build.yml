@@ -65,7 +65,7 @@ jobs:
         run: echo "sdk.dir=C\:\\Users\\Lucas\\AppData\\Local\\Android\\Sdk" > D:\a\MapTrack\MapTrack\local.properties
 
       - name: Create local.properties
-        run: echo "sdk.dir=C\:\\Users\\Lucas\\AppData\\Local\\Android\\Sdk" > D:\a\MapTrack\MapTrack\local.properties
+        run: echo "sdk.dir=${{ secrets.SDK_LOCATION }}" > local.properties && echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> local.properties
       
       - name: Run tests
         run: ./gradlew test
@@ -92,6 +92,9 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Create local.properties
+        run: echo "sdk.dir=${{ secrets.SDK_LOCATION }}" > local.properties && echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> local.properties
 
       - name: Build AAB
         run: ./gradlew bundle
