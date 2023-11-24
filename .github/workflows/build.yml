@@ -32,6 +32,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Create local.properties
+        run: echo "sdk.dir=C\:\\Users\\Lucas\\AppData\\Local\\Android\\Sdk" > D:\a\MapTrack\MapTrack\local.properties
+      
       - name: Run tests
         run: ./gradlew test
 
