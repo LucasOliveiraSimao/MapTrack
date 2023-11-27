@@ -59,24 +59,21 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         binding.mapView.onCreate(savedInstanceState)
 
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        if (PermissionUtil.hasLocationPermissions(requireContext())) {
-            return
-        } else {
-            showPermissionDialog(
-                { requestPermissions() },
-                { binding.btnToggle.isEnabled = false }
-            )
-        }
-
         binding.btnToggle.setOnClickListener {
             toggleButtonText()
             sendCommandToService(START_OR_RESUME_SERVICE_ACTION)
+        }
+
+        if (PermissionUtil.hasLocationPermissions(requireContext())) {
+        } else {
+            showPermissionDialog(
+                positiveAction =  {
+                    requestPermissions()
+                },
+                negativeAction = {
+                    binding.btnToggle.isEnabled = false
+                }
+            )
         }
 
         binding.mapView.getMapAsync {
@@ -96,6 +93,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         setupService()
 
+        return binding.root
     }
 
     private fun displayDistanceTraveled(): String {
