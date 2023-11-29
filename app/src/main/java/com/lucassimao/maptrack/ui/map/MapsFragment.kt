@@ -57,6 +57,10 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     ): View {
         binding = FragmentMapsBinding.inflate(layoutInflater)
 
+        binding.mapView.getMapAsync { googleMaps ->
+            configureMapStyle(googleMaps)
+        }
+
         binding.mapView.onCreate(savedInstanceState)
 
         binding.btnToggle.setOnClickListener {
@@ -67,22 +71,12 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if (PermissionUtil.hasLocationPermissions(requireContext())) {
         } else {
             showPermissionDialog(
-                positiveAction =  {
+                positiveAction = {
                     requestPermissions()
                 },
                 negativeAction = {
                     binding.btnToggle.isEnabled = false
                 }
-            )
-        }
-
-        binding.mapView.getMapAsync {
-            map = it
-            map?.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    requireContext(),
-                    R.raw.style_map
-                )
             )
         }
 
@@ -94,6 +88,15 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         setupService()
 
         return binding.root
+    }
+
+    private fun configureMapStyle(googleMaps: GoogleMap) {
+        googleMaps.setMapStyle(loadMapStyle())
+    }
+
+    private fun loadMapStyle(): MapStyleOptions {
+        val styleResourceId = R.raw.style_map
+        return MapStyleOptions.loadRawResourceStyle(requireContext(), styleResourceId)
     }
 
     private fun displayDistanceTraveled(): String {
