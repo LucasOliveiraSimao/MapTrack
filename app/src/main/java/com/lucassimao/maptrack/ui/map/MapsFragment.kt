@@ -57,18 +57,35 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     ): View {
         binding = FragmentMapsBinding.inflate(layoutInflater)
 
+        requestPermissions()
+
         binding.mapView.getMapAsync { googleMaps ->
+            map = googleMaps
             configureMapStyle(googleMaps)
         }
-
-        binding.mapView.onCreate(savedInstanceState)
 
         binding.btnToggle.setOnClickListener {
             toggleButtonText()
             sendCommandToService(START_OR_RESUME_SERVICE_ACTION)
         }
 
+        binding.btnFinish.setOnClickListener {
+            centerCameraOnUser()
+            finalizeAndSaveRunData()
+        }
+
+        setupService()
+
+        binding.mapView.onCreate(savedInstanceState)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         if (PermissionUtil.hasLocationPermissions(requireContext())) {
+            return
         } else {
             showPermissionDialog(
                 positiveAction = {
@@ -80,14 +97,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             )
         }
 
-        binding.btnFinish.setOnClickListener {
-            centerCameraOnUser()
-            finalizeAndSaveRunData()
-        }
-
-        setupService()
-
-        return binding.root
     }
 
     private fun configureMapStyle(googleMaps: GoogleMap) {
@@ -98,34 +107,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val styleResourceId = R.raw.style_map
         return MapStyleOptions.loadRawResourceStyle(requireContext(), styleResourceId)
     }
-
-    private fun displayDistanceTraveled(): String {
-        var distanceTraveledInMeters = 0.0f
-
-        for (route in routePolylines) {
-            distanceTraveledInMeters += calculateRouteDistance(route)
-        }
-
-        val distanceTraveledInKm = metersToKilometers(distanceTraveledInMeters)
-
-        return formatFloatToTwoDecimalPlaces(distanceTraveledInKm)
-    }
-
-    private fun displayAverageSpeed(): String {
-        var distanceTraveledInMeters = 0.0f
-
-        for (route in routePolylines) {
-            distanceTraveledInMeters += calculateRouteDistance(route)
-        }
-
-        val averageSpeed: Float = calculateAverageSpeed(
-            metersToKilometers(distanceTraveledInMeters),
-            millisToHours(totalExecutionTime)
-        )
-
-        return formatFloatToTwoDecimalPlaces(averageSpeed)
-    }
-
 
     private fun finalizeAndSaveRunData() {
         var distanceTraveledInMeters = 0.0f
@@ -159,7 +140,34 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     }
 
-    private fun finalizeRun() {
+    private fun displayDistanceTraveled(): String {
+        var distanceTraveledInMeters = 0.0f
+
+        for (route in routePolylines) {
+            distanceTraveledInMeters += calculateRouteDistance(route)
+        }
+
+        val distanceTraveledInKm = metersToKilometers(distanceTraveledInMeters)
+
+        return formatFloatToTwoDecimalPlaces(distanceTraveledInKm)
+    }
+
+    private fun displayAverageSpeed(): String {
+        var distanceTraveledInMeters = 0.0f
+
+        for (route in routePolylines) {
+            distanceTraveledInMeters += calculateRouteDistance(route)
+        }
+
+        val averageSpeed: Float = calculateAverageSpeed(
+            metersToKilometers(distanceTraveledInMeters),
+            millisToHours(totalExecutionTime)
+        )
+
+        return formatFloatToTwoDecimalPlaces(averageSpeed)
+    }
+
+    private fun finalizeRun(){
         sendCommandToService(Constants.STOP_SERVICE_ACTION)
         findNavController().navigate(R.id.action_mapsFragment_to_homeFragment)
     }
@@ -270,7 +278,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun requestPermissions() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             EasyPermissions.requestPermissions(
                 this,
