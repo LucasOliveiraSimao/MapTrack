@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.lucassimao.maptrack.R
-import com.lucassimao.maptrack.data.model.RouteEntity
+import com.lucassimao.maptrack.data.entity.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentHomeBinding
 import com.lucassimao.maptrack.util.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.util.getFormattedElapsedTime

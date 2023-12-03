@@ -1,7 +1,7 @@
 package com.lucassimao.maptrack.util
 
 import android.location.Location
-import com.lucassimao.maptrack.util.Constants.METERS_TO_KILOMETERS_CONVERSION_FACTOR
+import com.lucassimao.maptrack.data.core.ConversionFactor.METERS_TO_KILOMETERS_CONVERSION_FACTOR
 
 fun calculateRouteDistance(route: ListOfLocations): Float {
     var distance = 0f

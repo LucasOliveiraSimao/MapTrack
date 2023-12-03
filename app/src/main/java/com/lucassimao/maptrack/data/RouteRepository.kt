@@ -1,7 +1,7 @@
 package com.lucassimao.maptrack.data
 
 import com.lucassimao.maptrack.data.db.MapTrackDAO
-import com.lucassimao.maptrack.data.model.RouteEntity
+import com.lucassimao.maptrack.data.entity.RouteEntity
 import javax.inject.Inject
 
 class RouteRepository @Inject constructor(private val dao: MapTrackDAO) {

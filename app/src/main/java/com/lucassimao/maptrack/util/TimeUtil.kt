@@ -1,8 +1,8 @@
 package com.lucassimao.maptrack.util
 
-import com.lucassimao.maptrack.util.Constants.MILLISECONDS_TO_SECONDS_CONVERSION_FACTOR
-import com.lucassimao.maptrack.util.Constants.MINUTES_TO_HOURS_CONVERSION_FACTOR
-import com.lucassimao.maptrack.util.Constants.SECONDS_TO_MINUTES_CONVERSION_FACTOR
+import com.lucassimao.maptrack.data.core.ConversionFactor.MILLISECONDS_TO_SECONDS_CONVERSION_FACTOR
+import com.lucassimao.maptrack.data.core.ConversionFactor.MINUTES_TO_HOURS_CONVERSION_FACTOR
+import com.lucassimao.maptrack.data.core.ConversionFactor.SECONDS_TO_MINUTES_CONVERSION_FACTOR
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
