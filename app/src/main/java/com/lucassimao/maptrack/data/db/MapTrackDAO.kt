@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.lucassimao.maptrack.data.model.RouteEntity
+import com.lucassimao.maptrack.data.entity.RouteEntity
 
 @Dao
 interface MapTrackDAO {

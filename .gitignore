@@ -123,6 +123,7 @@ obj/
 .idea/render.experimental.xml
 .idea/kotlinc.xml
 .idea/deploymentTargetDropDown.xml
+.idea/migrations.xml
 
 # Legacy Eclipse project files
 .classpath
