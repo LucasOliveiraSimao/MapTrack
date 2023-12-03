@@ -15,7 +15,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.lucassimao.maptrack.R
-import com.lucassimao.maptrack.data.model.RouteEntity
+import com.lucassimao.maptrack.data.entity.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
 import com.lucassimao.maptrack.service.MapTrackService
 import com.lucassimao.maptrack.ui.home.RouteViewModel
@@ -27,12 +27,10 @@ import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.ListOfLocations
 import com.lucassimao.maptrack.util.PermissionUtil
 import com.lucassimao.maptrack.util.buildPolylineOption
-import com.lucassimao.maptrack.util.calculateAverageSpeed
 import com.lucassimao.maptrack.util.calculateRouteDistance
 import com.lucassimao.maptrack.util.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
 import com.lucassimao.maptrack.util.metersToKilometers
-import com.lucassimao.maptrack.util.millisToHours
 import com.lucassimao.maptrack.util.showPermissionDialog
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -44,11 +42,13 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: FragmentMapsBinding
 
     private val viewModel by viewModels<RouteViewModel>()
+    private val speedAverageViewModel by viewModels<SpeedAverageViewModel>()
 
     private var routePolylines = mutableListOf<ListOfLocations>()
     private var service = MapTrackService
     private var map: GoogleMap? = null
     private var totalExecutionTime = 0L
+    private var averageSpeed = 0.0f
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,7 +96,13 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 }
             )
         }
+    }
 
+    private fun observeAverageSpeed() {
+        speedAverageViewModel.getSpeedAverage(calculateTotalDistance(), totalExecutionTime)
+            .observe(viewLifecycleOwner) {
+                averageSpeed = it
+            }
     }
 
     private fun configureMapStyle(googleMaps: GoogleMap) {
@@ -116,10 +122,10 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             distanceTraveledInMeters += calculateRouteDistance(route)
         }
 
-        val averageSpeed: Float = calculateAverageSpeed(
-            metersToKilometers(distanceTraveledInMeters),
-            millisToHours(totalExecutionTime)
-        )
+        speedAverageViewModel.getSpeedAverage(distanceTraveledInMeters, totalExecutionTime)
+            .observe(viewLifecycleOwner) {
+                averageSpeed = it
+            }
 
         val distanceTraveledInKM = metersToKilometers(distanceTraveledInMeters).toDouble()
 
@@ -152,22 +158,23 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         return formatFloatToTwoDecimalPlaces(distanceTraveledInKm)
     }
 
-    private fun displayAverageSpeed(): String {
-        var distanceTraveledInMeters = 0.0f
+    private fun calculateTotalDistance(): Float {
+        var totalDistance = 0.0f
 
         for (route in routePolylines) {
-            distanceTraveledInMeters += calculateRouteDistance(route)
+            totalDistance += calculateRouteDistance(route)
         }
 
-        val averageSpeed: Float = calculateAverageSpeed(
-            metersToKilometers(distanceTraveledInMeters),
-            millisToHours(totalExecutionTime)
-        )
+        return totalDistance
+    }
+
+    private fun displayAverageSpeed(): String {
+        observeAverageSpeed()
 
         return formatFloatToTwoDecimalPlaces(averageSpeed)
     }
 
-    private fun finalizeRun(){
+    private fun finalizeRun() {
         sendCommandToService(Constants.STOP_SERVICE_ACTION)
         findNavController().navigate(R.id.action_mapsFragment_to_homeFragment)
     }
