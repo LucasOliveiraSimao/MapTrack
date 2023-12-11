@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lucassimao.maptrack.R
+import com.lucassimao.maptrack.data.core.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.data.entity.RouteEntity
 import com.lucassimao.maptrack.databinding.ListItemBinding
 import com.lucassimao.maptrack.util.formatDate
-import com.lucassimao.maptrack.util.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
 
 class RouteAdapter(private val listOfRoutes: List<RouteEntity>) :

@@ -28,7 +28,7 @@ import com.lucassimao.maptrack.util.Constants.REQUEST_CODE_PENDING_INTENT_RESUME
 import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.STOP_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.TIMER_UPDATE_INTERVAL_IN_MILLISECONDS
-import com.lucassimao.maptrack.util.ListOfPolylines
+import com.lucassimao.maptrack.data.core.ListOfPolylines
 import com.lucassimao.maptrack.util.PermissionUtil.hasLocationPermissions
 import com.lucassimao.maptrack.util.calculateElapsedTime
 import com.lucassimao.maptrack.util.getFormattedElapsedTime

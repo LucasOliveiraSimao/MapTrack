@@ -1,4 +1,4 @@
-package com.lucassimao.maptrack.util
+package com.lucassimao.maptrack.data.core
 
 import com.google.android.gms.maps.model.LatLng
 

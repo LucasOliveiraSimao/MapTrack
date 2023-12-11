@@ -1,4 +1,4 @@
-package com.lucassimao.maptrack.ui.map
+package com.lucassimao.maptrack.ui.map.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.lucassimao.maptrack.base.MainCoroutineScopeRule
@@ -6,7 +6,7 @@ import com.lucassimao.maptrack.base.SpeedAverageBase.distanceInMeters
 import com.lucassimao.maptrack.base.SpeedAverageBase.expected
 import com.lucassimao.maptrack.base.SpeedAverageBase.totalTimeInMilliseconds
 import com.lucassimao.maptrack.base.getValueForTest
-import com.lucassimao.maptrack.domain.SpeedAverageUseCase
+import com.lucassimao.maptrack.domain.usecase.SpeedAverageUseCase
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
