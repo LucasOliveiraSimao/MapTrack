@@ -1,8 +1,8 @@
-package com.lucassimao.maptrack.ui.map
+package com.lucassimao.maptrack.ui.map.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.lucassimao.maptrack.domain.SpeedAverageUseCase
+import com.lucassimao.maptrack.domain.usecase.SpeedAverageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

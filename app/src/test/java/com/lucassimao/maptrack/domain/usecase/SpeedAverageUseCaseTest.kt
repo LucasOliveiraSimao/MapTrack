@@ -1,8 +1,9 @@
-package com.lucassimao.maptrack.domain
+package com.lucassimao.maptrack.domain.usecase
 
 import com.lucassimao.maptrack.base.SpeedAverageBase.distanceInMeters
 import com.lucassimao.maptrack.base.SpeedAverageBase.expected
 import com.lucassimao.maptrack.base.SpeedAverageBase.totalTimeInMilliseconds
+import com.lucassimao.maptrack.domain.repository.SpeedCalculatorRepository
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals

@@ -1,10 +1,11 @@
-package com.lucassimao.maptrack.data
+package com.lucassimao.maptrack.data.repositoryImpl
 
-import com.lucassimao.maptrack.data.db.MapTrackDAO
 import com.lucassimao.maptrack.base.Entity.routeEntity
 import com.lucassimao.maptrack.base.Entity.routeList
 import com.lucassimao.maptrack.base.Entity.totalDistance
 import com.lucassimao.maptrack.base.Entity.totalTime
+import com.lucassimao.maptrack.data.RouteRepository
+import com.lucassimao.maptrack.data.db.MapTrackDAO
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

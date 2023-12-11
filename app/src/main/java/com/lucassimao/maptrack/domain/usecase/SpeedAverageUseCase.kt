@@ -1,5 +1,6 @@
-package com.lucassimao.maptrack.domain
+package com.lucassimao.maptrack.domain.usecase
 
+import com.lucassimao.maptrack.domain.repository.SpeedCalculatorRepository
 import javax.inject.Inject
 
 class SpeedAverageUseCase @Inject constructor(

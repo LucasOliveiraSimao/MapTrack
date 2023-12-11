@@ -1,4 +1,4 @@
-package com.lucassimao.maptrack.data
+package com.lucassimao.maptrack.data.repositoryImpl
 
 import com.lucassimao.maptrack.base.SpeedAverageBase.distanceInMeters
 import com.lucassimao.maptrack.base.SpeedAverageBase.expected

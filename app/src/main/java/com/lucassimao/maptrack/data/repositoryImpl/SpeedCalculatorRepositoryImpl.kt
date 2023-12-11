@@ -1,7 +1,7 @@
-package com.lucassimao.maptrack.data
+package com.lucassimao.maptrack.data.repositoryImpl
 
 import com.lucassimao.maptrack.data.entity.SpeedCalculatorEntity
-import com.lucassimao.maptrack.domain.SpeedCalculatorRepository
+import com.lucassimao.maptrack.domain.repository.SpeedCalculatorRepository
 import javax.inject.Inject
 
 class SpeedCalculatorRepositoryImpl @Inject constructor(
