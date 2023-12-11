@@ -15,22 +15,22 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.lucassimao.maptrack.R
+import com.lucassimao.maptrack.data.core.ListOfLocations
+import com.lucassimao.maptrack.data.core.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.data.entity.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
 import com.lucassimao.maptrack.service.MapTrackService
 import com.lucassimao.maptrack.ui.home.RouteViewModel
+import com.lucassimao.maptrack.ui.map.viewmodel.DistanceTraveledViewModel
+import com.lucassimao.maptrack.ui.map.viewmodel.SpeedAverageViewModel
 import com.lucassimao.maptrack.util.Constants
 import com.lucassimao.maptrack.util.Constants.GOOGLE_MAPS_CAMERA_ZOOM_VALUE
 import com.lucassimao.maptrack.util.Constants.PAUSE_SERVICE_ACTION
 import com.lucassimao.maptrack.util.Constants.PERMISSION_REQUEST_CODE
 import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
-import com.lucassimao.maptrack.util.ListOfLocations
 import com.lucassimao.maptrack.util.PermissionUtil
 import com.lucassimao.maptrack.util.buildPolylineOption
-import com.lucassimao.maptrack.util.calculateRouteDistance
-import com.lucassimao.maptrack.util.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
-import com.lucassimao.maptrack.util.metersToKilometers
 import com.lucassimao.maptrack.util.showPermissionDialog
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -43,12 +43,14 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private val viewModel by viewModels<RouteViewModel>()
     private val speedAverageViewModel by viewModels<SpeedAverageViewModel>()
+    private val distanceTraveledViewModel by viewModels<DistanceTraveledViewModel>()
 
     private var routePolylines = mutableListOf<ListOfLocations>()
     private var service = MapTrackService
     private var map: GoogleMap? = null
-    private var totalExecutionTime = 0L
+    private var elapsedTimeDuringJourney = 0L
     private var averageSpeed = 0.0f
+    private var distanceTraveledByUser = 0.0f
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +66,8 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             configureMapStyle(googleMaps)
         }
 
+        binding.mapView.onCreate(savedInstanceState)
+
         binding.btnToggle.setOnClickListener {
             toggleButtonText()
             sendCommandToService(START_OR_RESUME_SERVICE_ACTION)
@@ -75,8 +79,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
 
         setupService()
-
-        binding.mapView.onCreate(savedInstanceState)
 
         return binding.root
     }
@@ -98,11 +100,30 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun observeAverageSpeed() {
-        speedAverageViewModel.getSpeedAverage(calculateTotalDistance(), totalExecutionTime)
-            .observe(viewLifecycleOwner) {
-                averageSpeed = it
-            }
+    private fun displayAverageSpeed(): String {
+        return formatFloatToTwoDecimalPlaces(averageSpeed)
+    }
+
+    private fun displayDistanceTraveled(): String {
+        return formatFloatToTwoDecimalPlaces(distanceTraveledByUser)
+    }
+
+    private fun setupService() {
+        service.listOfPolylinesLiveData.observe(viewLifecycleOwner) {
+            routePolylines = it
+            binding.distanceTraveled.text =
+                getString(R.string.distance_traveled_format, displayDistanceTraveled())
+            addAllPolylines()
+            addLastedPolyline()
+            moveCameraToUserLocationWithZoom()
+        }
+
+        service.totalExecutionTimeLiveData.observe(viewLifecycleOwner) {
+            elapsedTimeDuringJourney = it
+            binding.averageSpeed.text =
+                getString(R.string.average_speed_format, displayAverageSpeed())
+            binding.timeCounter.text = getFormattedElapsedTime(it)
+        }
     }
 
     private fun configureMapStyle(googleMaps: GoogleMap) {
@@ -115,63 +136,20 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun finalizeAndSaveRunData() {
-        var distanceTraveledInMeters = 0.0f
         val currentTimeInMillis = Calendar.getInstance().timeInMillis
-
-        for (route in routePolylines) {
-            distanceTraveledInMeters += calculateRouteDistance(route)
-        }
-
-        speedAverageViewModel.getSpeedAverage(distanceTraveledInMeters, totalExecutionTime)
-            .observe(viewLifecycleOwner) {
-                averageSpeed = it
-            }
-
-        val distanceTraveledInKM = metersToKilometers(distanceTraveledInMeters).toDouble()
 
         map?.snapshot { bitmap ->
             val route = RouteEntity(
                 bitmap,
                 currentTimeInMillis,
                 averageSpeed,
-                distanceTraveledInKM,
-                totalExecutionTime
+                distanceTraveledByUser.toDouble(),
+                elapsedTimeDuringJourney
             )
-
             viewModel.insertRoute(route)
 
             finalizeRun()
-
         }
-
-    }
-
-    private fun displayDistanceTraveled(): String {
-        var distanceTraveledInMeters = 0.0f
-
-        for (route in routePolylines) {
-            distanceTraveledInMeters += calculateRouteDistance(route)
-        }
-
-        val distanceTraveledInKm = metersToKilometers(distanceTraveledInMeters)
-
-        return formatFloatToTwoDecimalPlaces(distanceTraveledInKm)
-    }
-
-    private fun calculateTotalDistance(): Float {
-        var totalDistance = 0.0f
-
-        for (route in routePolylines) {
-            totalDistance += calculateRouteDistance(route)
-        }
-
-        return totalDistance
-    }
-
-    private fun displayAverageSpeed(): String {
-        observeAverageSpeed()
-
-        return formatFloatToTwoDecimalPlaces(averageSpeed)
     }
 
     private fun finalizeRun() {
@@ -199,25 +177,8 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun setupService() {
-        service.listOfPolylinesLiveData.observe(viewLifecycleOwner) {
-            routePolylines = it
-            binding.distanceTraveled.text =
-                getString(R.string.distance_traveled_format, displayDistanceTraveled())
-            addAllPolylines()
-            addLastedPolyline()
-            moveCameraToUserLocationWithZoom()
-        }
-
-        service.totalExecutionTimeLiveData.observe(viewLifecycleOwner) {
-            totalExecutionTime = it
-            binding.averageSpeed.text =
-                getString(R.string.average_speed_format, displayAverageSpeed())
-            binding.timeCounter.text = getFormattedElapsedTime(it)
-        }
-    }
-
     private fun moveCameraToUserLocationWithZoom() {
+        updateDistanceAndSpeedData()
         if (routePolylines.isNotEmpty() && routePolylines.last().isNotEmpty()) {
             map?.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -226,6 +187,16 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 )
             )
         }
+    }
+
+    private fun updateDistanceAndSpeedData() {
+        distanceTraveledViewModel.getDistanceTraveled(routePolylines).observe(viewLifecycleOwner) {
+            distanceTraveledByUser = it
+        }
+        speedAverageViewModel.getSpeedAverage(distanceTraveledByUser, elapsedTimeDuringJourney)
+            .observe(viewLifecycleOwner) {
+                averageSpeed = it
+            }
     }
 
     private fun centerCameraOnUser() {

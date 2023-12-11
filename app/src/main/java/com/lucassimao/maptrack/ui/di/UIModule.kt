@@ -1,7 +1,9 @@
 package com.lucassimao.maptrack.ui.di
 
-import com.lucassimao.maptrack.domain.SpeedAverageUseCase
-import com.lucassimao.maptrack.ui.map.SpeedAverageViewModel
+import com.lucassimao.maptrack.domain.usecase.DistanceTraveledUseCase
+import com.lucassimao.maptrack.domain.usecase.SpeedAverageUseCase
+import com.lucassimao.maptrack.ui.map.viewmodel.DistanceTraveledViewModel
+import com.lucassimao.maptrack.ui.map.viewmodel.SpeedAverageViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,4 +15,8 @@ object UIModule {
     @Provides
     fun provideSpeedAverageViewModel(useCase: SpeedAverageUseCase) =
         SpeedAverageViewModel(useCase)
+
+    @Provides
+    fun provideDistanceTraveledViewModel(useCase: DistanceTraveledUseCase) =
+        DistanceTraveledViewModel(useCase)
 }
