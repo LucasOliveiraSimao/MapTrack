@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_alert"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:justificationMode="inter_word"
-    android:padding="16dp"
-    android:textColor="@color/black"
-    android:text="@string/notice_about_location_permission"
-    android:textAlignment="textStart">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-</TextView>
+    <TextView
+        android:id="@+id/alert_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="@string/maps_title_activate_mobile_data" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="8dp"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/alert_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        tools:text="@string/maps_message_activate_mobile_data" />
+
+</LinearLayout>
