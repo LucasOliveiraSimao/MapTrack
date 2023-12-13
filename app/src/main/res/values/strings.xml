@@ -16,21 +16,27 @@
 
     <!--  Maps  -->
     <string name="maps_time_counter">00:00:00</string>
-    <string name="start">Começar</string>
-    <string name="restart">Continuar</string>
-    <string name="you_need_to_accept_location_permissions_to_use_this_app">Você precisa aceitar as permissões de localização para usar este aplicativo</string>
-    <string name="pause">Parar</string>
-    <string name="finish">Finalizar</string>
+    <string name="maps_start">Começar</string>
+    <string name="maps_restart">Continuar</string>
+    <string name="maps_you_need_to_accept_location_permissions_to_use_this_app">Você precisa aceitar as permissões de localização para usar este aplicativo</string>
+    <string name="maps_pause">Parar</string>
+    <string name="maps_finish">Finalizar</string>
     <string name="maps_distance_traveled">0.00 Km</string>
     <string name="maps_average_speed">0.00 Km/h</string>
+    <string name="maps_accepted">Aceito</string>
+    <string name="maps_i_do_not_accept">Não Aceito</string>
+    <string name="maps_title_activate_mobile_data">Por favor, ative seus dados móveis para uma melhor experiência.</string>
+    <string name="maps_message_activate_mobile_data">Para uma experiência otimizada, recomendamos ativar seus dados móveis temporariamente. Não se preocupe, nenhum dado do seu pacote será consumido; essa ativação é necessária apenas para renderizar o mapa.</string>
+    <string name="maps_to_close">Fechar</string>
+    <string name="maps_distance_traveled_format">%1$s Km</string>
+    <string name="maps_average_speed_format">%1$s Km/h</string>
+    <string name="maps_android_13_permission_message">Voce precisa aceitar a permissão de notificação e localização</string>
+    <string name="permission_required">Permissão necessária:</string>
+    <string name="notice_about_location_permission">Este aplicativo coleta dados de localização para registrar o seu trajeto, coletando informações de localização em tempo real. Essas informações são usadas para fornecer funcionalidades relacionadas à localização, como navegação e estatísticas. A coleta de dados de localização ocorre tanto quando o aplicativo está em primeiro plano quanto em segundo plano, garantindo uma experiência contínua e abrangente</string>
     <!--  Maps  -->
     
     <string name="distance_format">Distância: %1$s Km</string>
-    <string name="distance_traveled_format">%1$s Km</string>
     <string name="total_distance_format">%1$s Km</string>
-    <string name="average_speed_format">%1$s Km/h</string>
     <string name="time_format">Tempo: %1$s</string>
-    <string name="android_13_permission_message">Voce precisa aceitar a permissão de notificação e localização</string>
-    <string name="permission_required">Permissão necessária:</string>
-    <string name="notice_about_location_permission">Este aplicativo coleta dados de localização para registrar o seu trajeto, coletando informações de localização em tempo real. Essas informações são usadas para fornecer funcionalidades relacionadas à localização, como navegação e estatísticas. A coleta de dados de localização ocorre tanto quando o aplicativo está em primeiro plano quanto em segundo plano, garantindo uma experiência contínua e abrangente</string>
+
 </resources>

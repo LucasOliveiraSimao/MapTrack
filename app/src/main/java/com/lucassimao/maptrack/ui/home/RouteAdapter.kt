@@ -42,7 +42,7 @@ class RouteViewHolder(private val binding: ListItemBinding) :
                 distanceFormatFloat
             )
             val averageSpeedString = itemView.resources.getString(
-                R.string.average_speed_format,
+                R.string.maps_average_speed_format,
                 averageSpeedFormatFloat
             )
             val timeString = itemView.resources.getString(

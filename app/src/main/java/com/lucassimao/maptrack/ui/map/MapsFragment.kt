@@ -31,7 +31,8 @@ import com.lucassimao.maptrack.util.Constants.START_OR_RESUME_SERVICE_ACTION
 import com.lucassimao.maptrack.util.PermissionUtil
 import com.lucassimao.maptrack.util.buildPolylineOption
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
-import com.lucassimao.maptrack.util.showPermissionDialog
+import com.lucassimao.maptrack.util.isMobileDataEnable
+import com.lucassimao.maptrack.util.showAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -89,13 +90,17 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if (PermissionUtil.hasLocationPermissions(requireContext())) {
             return
         } else {
-            showPermissionDialog(
+            showAlertDialog(
+                title = getString(R.string.permission_required),
+                message = getString(R.string.notice_about_location_permission),
                 positiveAction = {
                     requestPermissions()
                 },
                 negativeAction = {
                     binding.btnToggle.isEnabled = false
-                }
+                },
+                positiveButtonText = getString(R.string.maps_accepted),
+                negativeButtonText = getString(R.string.maps_i_do_not_accept)
             )
         }
     }
@@ -112,7 +117,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         service.listOfPolylinesLiveData.observe(viewLifecycleOwner) {
             routePolylines = it
             binding.distanceTraveled.text =
-                getString(R.string.distance_traveled_format, displayDistanceTraveled())
+                getString(R.string.maps_distance_traveled_format, displayDistanceTraveled())
             addAllPolylines()
             addLastedPolyline()
             moveCameraToUserLocationWithZoom()
@@ -121,7 +126,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         service.totalExecutionTimeLiveData.observe(viewLifecycleOwner) {
             elapsedTimeDuringJourney = it
             binding.averageSpeed.text =
-                getString(R.string.average_speed_format, displayAverageSpeed())
+                getString(R.string.maps_average_speed_format, displayAverageSpeed())
             binding.timeCounter.text = getFormattedElapsedTime(it)
         }
     }
@@ -136,19 +141,34 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun finalizeAndSaveRunData() {
-        val currentTimeInMillis = Calendar.getInstance().timeInMillis
 
-        map?.snapshot { bitmap ->
-            val route = RouteEntity(
-                bitmap,
-                currentTimeInMillis,
-                averageSpeed,
-                distanceTraveledByUser.toDouble(),
-                elapsedTimeDuringJourney
+        if (isMobileDataEnable()) {
+            val currentTimeInMillis = Calendar.getInstance().timeInMillis
+
+            map?.snapshot { bitmap ->
+                val route = RouteEntity(
+                    bitmap,
+                    currentTimeInMillis,
+                    averageSpeed,
+                    distanceTraveledByUser.toDouble(),
+                    elapsedTimeDuringJourney
+                )
+                viewModel.insertRoute(route)
+
+                finalizeRun()
+            }
+        } else {
+            showAlertDialog(
+                title = getString(R.string.maps_title_activate_mobile_data),
+                message = getString(R.string.maps_message_activate_mobile_data),
+                positiveAction = {
+                    return@showAlertDialog
+                },
+                negativeAction = {
+                    return@showAlertDialog
+                },
+                negativeButtonText = getString(R.string.maps_to_close)
             )
-            viewModel.insertRoute(route)
-
-            finalizeRun()
         }
     }
 
@@ -164,7 +184,8 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun setTextAndClickListener(isTracking: Boolean) {
-        val buttonText = if (isTracking) getString(R.string.pause) else getString(R.string.restart)
+        val buttonText =
+            if (isTracking) getString(R.string.maps_pause) else getString(R.string.maps_restart)
         binding.btnToggle.text = buttonText
         binding.btnToggle.setOnClickListener {
             if (isTracking) {
@@ -259,7 +280,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             EasyPermissions.requestPermissions(
                 this,
-                getString(R.string.android_13_permission_message),
+                getString(R.string.maps_android_13_permission_message),
                 PERMISSION_REQUEST_CODE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -269,7 +290,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         } else {
             EasyPermissions.requestPermissions(
                 this,
-                getString(R.string.you_need_to_accept_location_permissions_to_use_this_app),
+                getString(R.string.maps_you_need_to_accept_location_permissions_to_use_this_app),
                 PERMISSION_REQUEST_CODE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
