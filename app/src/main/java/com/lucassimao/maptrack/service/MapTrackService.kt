@@ -125,7 +125,7 @@ class MapTrackService : LifecycleService() {
 
     private fun updateNotificationTrackingStatus(isTracking: Boolean) {
         val notificationActionLabel =
-            if (isTracking) getString(R.string.pause) else getString(R.string.restart)
+            if (isTracking) getString(R.string.maps_pause) else getString(R.string.maps_restart)
 
         val trackingPendingIntent = if (isTracking) {
             val pauseIntentAction = Intent(this, MapTrackService::class.java).apply {
