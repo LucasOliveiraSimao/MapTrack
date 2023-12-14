@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_alert"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:background="@color/white">
+
+    <TextView
+        android:id="@+id/alert_title"
+        style="@style/TitleAlertDialogDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/maps_title_activate_mobile_data" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="8dp"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/alert_message"
+        style="@style/MessageAlertDialogDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/maps_message_activate_mobile_data" />
+
+</LinearLayout>
