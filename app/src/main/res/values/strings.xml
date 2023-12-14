@@ -2,7 +2,7 @@
     <string name="app_name">MapTrack</string>
 
     <!--    Content Card Home-->
-    <string name="content_card_total_distance">Distância Total</string>
+    <string name="content_card_general_data">Dados Gerais</string>
     <string name="content_card_total_km">0 km</string>
     <string name="content_card_total_time">00:00:00</string>
     <!--    Content Card Home-->
