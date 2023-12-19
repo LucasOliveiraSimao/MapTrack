@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:showIn="@layout/fragment_home"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:showIn="@layout/fragment_home">
 
     <ImageView
         android:id="@+id/list_item_image"
@@ -21,12 +21,14 @@
         android:id="@+id/list_item_date"
         style="@style/TextViewListItemDefault"
         android:layout_width="wrap_content"
-        android:textSize="15sp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="@string/list_item_date"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/list_item_distance"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
-        app:layout_constraintTop_toTopOf="@+id/list_item_image" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        tools:text="@string/list_item_date" />
 
     <TextView
         android:id="@+id/list_item_distance"
@@ -34,10 +36,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="@string/list_item_distance"
         android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/list_item_time"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
-        app:layout_constraintTop_toBottomOf="@+id/list_item_date" />
+        app:layout_constraintTop_toBottomOf="@+id/list_item_date"
+        app:layout_constraintVertical_bias="0.5"
+        tools:text="@string/list_item_distance" />
 
     <TextView
         android:id="@+id/list_item_time"
@@ -45,10 +49,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="@string/list_item_time"
         android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/list_item_average_speed"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
-        app:layout_constraintTop_toBottomOf="@+id/list_item_distance" />
+        app:layout_constraintTop_toBottomOf="@+id/list_item_distance"
+        app:layout_constraintVertical_bias="0.5"
+        tools:text="@string/list_item_time" />
 
     <TextView
         android:id="@+id/list_item_average_speed"
@@ -56,9 +62,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="@string/list_item_avg_speed"
         android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
-        app:layout_constraintTop_toBottomOf="@+id/list_item_time" />
+        app:layout_constraintTop_toBottomOf="@+id/list_item_time"
+        app:layout_constraintVertical_bias="0.5"
+        tools:text="@string/list_item_avg_speed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

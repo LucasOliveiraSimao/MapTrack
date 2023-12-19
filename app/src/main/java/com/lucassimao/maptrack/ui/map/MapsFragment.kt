@@ -60,8 +60,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     ): View {
         binding = FragmentMapsBinding.inflate(layoutInflater)
 
-        requestPermissions()
-
         binding.mapView.getMapAsync { googleMaps ->
             map = googleMaps
             configureMapStyle(googleMaps)
