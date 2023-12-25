@@ -10,6 +10,10 @@
         app:destination="@id/mapsFragment"
         app:launchSingleTop="true" />
 
+    <action
+        android:id="@+id/action_openDialog"
+        app:destination="@id/detailsFragment" />
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.lucassimao.maptrack.ui.home.HomeFragment"
@@ -29,4 +33,9 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/detailsFragment"
+        android:name="com.lucassimao.maptrack.ui.detail.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" />
 </navigation>

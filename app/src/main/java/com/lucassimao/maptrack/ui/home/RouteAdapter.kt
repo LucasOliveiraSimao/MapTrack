@@ -5,19 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lucassimao.maptrack.R
-import com.lucassimao.maptrack.data.core.formatFloatToTwoDecimalPlaces
+import com.lucassimao.maptrack.commom.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.data.entity.RouteEntity
 import com.lucassimao.maptrack.databinding.ListItemBinding
 import com.lucassimao.maptrack.util.formatDate
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
 
-class RouteAdapter(private val listOfRoutes: List<RouteEntity>) :
-    RecyclerView.Adapter<RouteViewHolder>() {
+class RouteAdapter(
+    private val listOfRoutes: List<RouteEntity>,
+    private val onItemClick: (RouteEntity) -> Unit
+) : RecyclerView.Adapter<RouteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RouteViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ListItemBinding.inflate(layoutInflater, parent, false)
-        return RouteViewHolder(binding)
+        return RouteViewHolder(binding, onItemClick)
     }
 
     override fun getItemCount() = listOfRoutes.size
@@ -27,13 +29,17 @@ class RouteAdapter(private val listOfRoutes: List<RouteEntity>) :
     }
 }
 
-class RouteViewHolder(private val binding: ListItemBinding) :
+class RouteViewHolder(
+    private val binding: ListItemBinding,
+    private val onItemClick: (RouteEntity) -> Unit
+) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(route: RouteEntity) {
         binding.apply {
 
-            val distanceFormatFloat = formatFloatToTwoDecimalPlaces(route.distanceTraveledInKM.toFloat())
+            val distanceFormatFloat =
+                formatFloatToTwoDecimalPlaces(route.distanceTraveledInKM.toFloat())
             val averageSpeedFormatFloat = formatFloatToTwoDecimalPlaces(route.averageSpeed)
             val timeFormat = getFormattedElapsedTime(route.totalExecutionTime)
 
@@ -59,6 +65,10 @@ class RouteViewHolder(private val binding: ListItemBinding) :
             listItemAverageSpeed.text = averageSpeedString
 
             listItemTime.text = timeString
+
+            itemView.setOnClickListener {
+                onItemClick(route)
+            }
         }
     }
 

@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.lucassimao.maptrack.NavGraphDirections
 import com.lucassimao.maptrack.R
-import com.lucassimao.maptrack.data.core.formatFloatToTwoDecimalPlaces
+import com.lucassimao.maptrack.commom.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.data.entity.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentHomeBinding
+import com.lucassimao.maptrack.ui.detail.DetailsFragment
 import com.lucassimao.maptrack.util.getFormattedElapsedTime
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,9 +69,23 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initRecyclerView(listOfRoutes: List<RouteEntity>) {
-        routeAdapter = RouteAdapter(listOfRoutes)
+    private fun initRecyclerView(routes: List<RouteEntity>) {
+        val onItemClick: (RouteEntity) -> Unit = { item ->
+            val action = NavGraphDirections.actionOpenDialog().apply {
+                arguments.putParcelable(DetailsFragment.KEY, item)
+            }
+            navigateTo(action)
+        }
+
+        setupRouteAdapter(routes, onItemClick)
+    }
+
+    private fun setupRouteAdapter(routes: List<RouteEntity>, onItemClick: (RouteEntity) -> Unit) {
+        routeAdapter = RouteAdapter(routes, onItemClick)
         binding.homeListOfRoutes.adapter = routeAdapter
     }
 
+    private fun navigateTo(action: NavDirections) {
+        findNavController().navigate(action)
+    }
 }
