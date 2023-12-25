@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.lucassimao.maptrack.R
 import com.lucassimao.maptrack.data.core.ListOfLocations
-import com.lucassimao.maptrack.data.core.formatFloatToTwoDecimalPlaces
+import com.lucassimao.maptrack.commom.formatFloatToTwoDecimalPlaces
 import com.lucassimao.maptrack.data.entity.RouteEntity
 import com.lucassimao.maptrack.databinding.FragmentMapsBinding
 import com.lucassimao.maptrack.service.MapTrackService

@@ -67,6 +67,6 @@
         app:layout_constraintStart_toEndOf="@+id/list_item_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_time"
         app:layout_constraintVertical_bias="0.5"
-        tools:text="@string/list_item_avg_speed" />
+        tools:text="@string/details_avg_speed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

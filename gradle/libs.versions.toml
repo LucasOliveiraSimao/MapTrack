@@ -20,6 +20,7 @@ firebase_crashlytics = "18.3.7"
 mockk = "1.13.5"
 core_testing = "2.1.0"
 test_core = "1.5.0"
+kotlin = "1.9.10"
 
 [libraries]
 core = { module = "androidx.core:core-ktx", version.ref = "core" }
@@ -68,3 +69,5 @@ coreTesting = { module = "androidx.arch.core:core-testing", version.ref = "core_
 coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 testCore = { module = "androidx.test:core-ktx", version.ref = "test_core" }
+[plugins]
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
